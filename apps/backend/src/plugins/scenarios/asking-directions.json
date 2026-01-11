@@ -1,0 +1,159 @@
+{
+  "scenario_id": "asking-directions-01",
+  "title": "Asking for Directions",
+  "chineseTitle": "問路",
+  "description": "Learn to ask for and understand directions to various locations",
+  "chineseDescription": "學習詢問和理解到各種地點的方向",
+  "difficulty": "A2-B1",
+  "category": "Travel",
+  "objective": "Successfully get directions to your destination",
+  "chineseObjective": "成功獲得到目的地的方向",
+  "estimatedTurns": 12,
+  "firstSpeaker": "user",
+  "defaultUserRole": "tourist",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Politely ask for help and state destination",
+      "chineseDescription": "禮貌地請求幫助並說明目的地",
+      "keywords": [
+        "excuse me",
+        "pardon me",
+        "sorry",
+        "hey",
+        "my bad",
+        "um",
+        "go",
+        "to",
+        "look for",
+        "where is",
+        "how to get there",
+        "how do I get to"
+      ],
+      "weight": 30
+    },
+    {
+      "id": 2,
+      "description": "Acknowledge directions and confirm understanding",
+      "chineseDescription": "回應並確認理解方向指示",
+      "keywords": [
+        "I understand",
+        "Got it",
+        "I know",
+        "I see",
+        "Clear",
+        "Okay",
+        "Correct",
+        "Yes",
+        "Like this",
+        "Say that again"
+      ],
+      "weight": 40
+    },
+    {
+      "id": 3,
+      "description": "Thank the person",
+      "chineseDescription": "感謝對方",
+      "keywords": [
+        "thank you",
+        "thank you",
+        "sorry to bother you",
+        "thanks",
+        "thanks a lot",
+        "thanks",
+        "thanks"
+      ],
+      "weight": 30
+    }
+  ],
+  "roles": [
+    {
+      "id": "tourist",
+      "name": "Tourist",
+      "chineseName": "遊客",
+      "systemPrompt": "You are a tourist trying to find a location. You need to ask for directions politely and confirm you understand. IMPORTANT: Use natural, conversational American English. Keep responses concise (1-2 sentences)."
+    },
+    {
+      "id": "local",
+      "name": "Local Resident",
+      "chineseName": "本地人",
+      "interviewerImage": "jan.png",
+      "interviewerId": "jan",
+      "systemPrompt": "You are a helpful local resident in the US. Give clear directions using landmarks and cardinal directions. IMPORTANT: Use natural, conversational American English (e.g., subway not metro). Keep responses concise (2-3 sentences). Be patient and helpful."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "tourist": [
+        {
+          "chinese": "請問，怎麼去市中心？",
+          "english": "Excuse me, how do I get to downtown?",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "不好意思，地鐵站在哪裡？",
+          "english": "Excuse me, where is the subway station?",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "好的，我明白了。",
+          "english": "Okay, I understand.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "了解，謝謝你的幫忙！",
+          "english": "I see, thank you for your help!",
+          "type": "safe",
+          "checkpointId": 3
+        }
+      ],
+      "local": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "excuse me (asking)",
+      "chinese": "請問"
+    },
+    {
+      "english": "how to get there",
+      "chinese": "怎麼走"
+    },
+    {
+      "english": "go straight",
+      "chinese": "直走"
+    },
+    {
+      "english": "turn",
+      "chinese": "轉"
+    },
+    {
+      "english": "where is",
+      "chinese": "在哪裡"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "chinese": "How do I get to...?",
+      "example": "地鐵站怎麼走?"
+    },
+    {
+      "chinese": "Where is...?",
+      "example": "銀行在哪裡?"
+    },
+    {
+      "chinese": "Excuse me, ...",
+      "example": "請問，這裡是哪裡?"
+    }
+  ],
+  "tags": [
+    "directions",
+    "travel",
+    "navigation"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

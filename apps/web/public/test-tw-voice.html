@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試台灣腔語音</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+        }
+        .voice-list {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .voice-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .taiwan {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .test-text {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #0c5460;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 台灣腔中文語音測試</h1>
+        
+        <div class="info">
+            <strong>📌 說明：</strong><br>
+            此頁面用於測試瀏覽器支援的台灣中文語音。<br>
+            系統會優先選擇台灣腔語音進行播放。
+        </div>
+
+        <div class="test-text">
+            <strong>測試文字：</strong><br>
+            你好！我叫小明。很高興認識你。<br>
+            <small style="color: #666;">注音：ㄋㄧˇ ㄏㄠˇ！ ㄨㄛˇ ㄐㄧㄠˋ ㄒㄧㄠˇ ㄇㄧㄥˊ。ㄏㄣˇ ㄍㄠ ㄒㄧㄥˋ ㄖㄣˋ ㄕˋ ㄋㄧˇ。</small>
+        </div>
+
+        <div class="controls">
+            <button onclick="testTaiwanVoice()">🔊 播放台灣腔</button>
+            <button onclick="testMainlandVoice()">🔊 播放大陸腔</button>
+            <button onclick="listAllVoices()">📋 列出所有語音</button>
+        </div>
+
+        <div id="voice-list" class="voice-list" style="display: none;">
+            <h3>可用的中文語音：</h3>
+            <div id="voices"></div>
+        </div>
+
+        <div id="selected-voice" style="margin: 20px 0; padding: 15px; background: #e8f5e9; border-radius: 8px; display: none;">
+            <strong>🎯 當前使用的語音：</strong>
+            <div id="voice-info" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <script>
+        let allVoices = [];
+
+        // 初始化語音列表
+        function initVoices() {
+            allVoices = speechSynthesis.getVoices();
+            
+            if (allVoices.length === 0) {
+                speechSynthesis.onvoiceschanged = () => {
+                    allVoices = speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        // 測試台灣腔語音
+        function testTaiwanVoice() {
+            const text = "你好！我叫小明。很高興認識你。";
+            
+            // 優先選擇台灣語音
+            const preferredVoices = [
+                'Microsoft HsiaoChen - Chinese (Taiwan)',
+                'Microsoft Yating - Chinese (Taiwan)',
+                'Google 國語（臺灣）',
+                'Mei-Jia',
+                'Sin-ji',
+                'Ting-Ting'
+            ];
+            
+            let selectedVoice = allVoices.find(voice => 
+                preferredVoices.some(preferred => voice.name.includes(preferred))
+            );
+            
+            if (!selectedVoice) {
+                selectedVoice = allVoices.find(voice => 
+                    voice.lang.includes('zh-TW') || 
+                    voice.lang.includes('zh-Hant') ||
+                    voice.name.includes('Taiwan') ||
+                    voice.name.includes('臺灣')
+                );
+            }
+            
+            playWithVoice(text, selectedVoice, 'zh-TW');
+        }
+
+        // 測試大陸腔語音（對比用）
+        function testMainlandVoice() {
+            const text = "你好！我叫小明。很高兴认识你。";
+            
+            const selectedVoice = allVoices.find(voice => 
+                voice.lang.includes('zh-CN') || voice.name.includes('China')
+            );
+            
+            playWithVoice(text, selectedVoice, 'zh-CN');
+        }
+
+        // 播放語音
+        function playWithVoice(text, voice, lang) {
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            if (voice) {
+                utterance.voice = voice;
+            }
+            
+            utterance.lang = lang;
+            utterance.rate = 0.85;
+            utterance.pitch = 1.05;
+            utterance.volume = 1.0;
+            
+            // 顯示選擇的語音信息
+            const voiceInfo = document.getElementById('voice-info');
+            const selectedDiv = document.getElementById('selected-voice');
+            
+            if (voice) {
+                voiceInfo.innerHTML = `
+                    <div><strong>名稱：</strong>${voice.name}</div>
+                    <div><strong>語言代碼：</strong>${voice.lang}</div>
+                    <div><strong>本地語音：</strong>${voice.localService ? '是' : '否'}</div>
+                    <div><strong>設定語速：</strong>0.85</div>
+                    <div><strong>設定音調：</strong>1.05</div>
+                `;
+            } else {
+                voiceInfo.innerHTML = `
+                    <div style="color: #d32f2f;"><strong>⚠️ 未找到指定語音，使用預設語音</strong></div>
+                    <div><strong>語言代碼：</strong>${lang}</div>
+                `;
+            }
+            selectedDiv.style.display = 'block';
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        // 列出所有可用語音
+        function listAllVoices() {
+            const voicesDiv = document.getElementById('voices');
+            const voiceList = document.getElementById('voice-list');
+            
+            voicesDiv.innerHTML = '';
+            
+            // 分類語音
+            const chineseVoices = allVoices.filter(v => 
+                v.lang.includes('zh') || v.lang.includes('cmn')
+            );
+            
+            const taiwanVoices = chineseVoices.filter(v =>
+                v.lang.includes('TW') || v.lang.includes('Hant') || 
+                v.name.includes('Taiwan') || v.name.includes('臺灣')
+            );
+            
+            const mainlandVoices = chineseVoices.filter(v =>
+                v.lang.includes('CN') || v.lang.includes('Hans') || 
+                v.name.includes('China') || v.name.includes('中国')
+            );
+            
+            const otherChinese = chineseVoices.filter(v =>
+                !taiwanVoices.includes(v) && !mainlandVoices.includes(v)
+            );
+            
+            // 顯示台灣語音
+            if (taiwanVoices.length > 0) {
+                voicesDiv.innerHTML += '<h4 style="color: #2196f3; margin-top: 10px;">🇹🇼 台灣中文：</h4>';
+                taiwanVoices.forEach(voice => {
+                    voicesDiv.innerHTML += `
+                        <div class="voice-item taiwan">
+                            <strong>${voice.name}</strong><br>
+                            <small>語言: ${voice.lang} | 本地: ${voice.localService ? '是' : '否'}</small>
+                        </div>
+                    `;
+                });
+            }
+            
+            // 顯示大陸語音
+            if (mainlandVoices.length > 0) {
+                voicesDiv.innerHTML += '<h4 style="color: #f44336; margin-top: 10px;">🇨🇳 大陸中文：</h4>';
+                mainlandVoices.forEach(voice => {
+                    voicesDiv.innerHTML += `
+                        <div class="voice-item">
+                            <strong>${voice.name}</strong><br>
+                            <small>語言: ${voice.lang} | 本地: ${voice.localService ? '是' : '否'}</small>
+                        </div>
+                    `;
+                });
+            }
+            
+            // 顯示其他中文語音
+            if (otherChinese.length > 0) {
+                voicesDiv.innerHTML += '<h4 style="color: #ff9800; margin-top: 10px;">🌏 其他中文：</h4>';
+                otherChinese.forEach(voice => {
+                    voicesDiv.innerHTML += `
+                        <div class="voice-item">
+                            <strong>${voice.name}</strong><br>
+                            <small>語言: ${voice.lang} | 本地: ${voice.localService ? '是' : '否'}</small>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (chineseVoices.length === 0) {
+                voicesDiv.innerHTML = '<div style="color: #d32f2f; padding: 20px; text-align: center;">⚠️ 未找到任何中文語音</div>';
+            }
+            
+            voiceList.style.display = 'block';
+        }
+
+        // 頁面載入時初始化
+        window.onload = () => {
+            initVoices();
+            setTimeout(initVoices, 100);
+        };
+    </script>
+</body>
+</html>

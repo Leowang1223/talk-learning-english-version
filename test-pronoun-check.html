@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代詞檢測自動測試</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .test-case {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .test-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-pass {
+            background: #2ecc71;
+            color: white;
+        }
+        .status-fail {
+            background: #e74c3c;
+            color: white;
+        }
+        .test-content {
+            margin: 10px 0;
+        }
+        .test-row {
+            display: flex;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .test-label {
+            width: 120px;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        .test-value {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+        }
+        .expected-value {
+            color: #27ae60;
+        }
+        .actual-value {
+            color: #3498db;
+        }
+        .error-value {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .console-output {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+        .summary {
+            background: #3498db;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .summary h2 {
+            margin: 0 0 10px 0;
+        }
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 代詞檢測自動測試工具</h1>
+    <button onclick="runAllTests()">▶️ 執行所有測試</button>
+    <div id="summary"></div>
+    <div id="results"></div>
+
+    <script>
+        // 🔧 代詞集合（與實際代碼一致）
+        const PRONOUNS = new Set([
+            // 第一人稱
+            '我', '俺', '咱', '咱們', '咱们', '吾',
+            // 第二人稱
+            '你', '您', '妳', '儂', '侬', '汝',
+            // 第三人稱
+            '他', '她', '它', '牠', '祂', '伊'
+        ]);
+
+        // 🔧 槽位檢查函數（與實際代碼一致）
+        function checkKeySlots(expected, actual) {
+            const errors = [];
+            const mismatchPositions = [];
+            let consoleLog = [];
+            
+            // Step 1: 清理文本
+            const cleanExpected = expected
+                .replace(/[，。！？；：、""''（）《》【】\s]/g, '')
+                .replace(/[,\.!?;:"'\(\)\[\]\s]/g, '');
+            
+            const cleanActual = actual
+                .replace(/[，。！？；：、""''（）《》【】\s]/g, '')
+                .replace(/[,\.!?;:"'\(\)\[\]\s]/g, '');
+            
+            // Step 2: 轉為字符數組
+            const expChars = Array.from(cleanExpected);
+            const actChars = Array.from(cleanActual);
+            
+            consoleLog.push('━'.repeat(80));
+            consoleLog.push('🔍 【槽位檢查】CHARACTER-BY-CHARACTER POSITION CHECK');
+            consoleLog.push('━'.repeat(80));
+            consoleLog.push(`📝 原始預期文本: ${expected}`);
+            consoleLog.push(`📝 原始實際文本: ${actual}`);
+            consoleLog.push(`🧹 清理後預期: ${cleanExpected}`);
+            consoleLog.push(`🧹 清理後實際: ${cleanActual}`);
+            consoleLog.push(`📊 字符數量: 預期=${expChars.length} 實際=${actChars.length}`);
+            consoleLog.push('━'.repeat(80));
+            
+            // Step 3: 逐字符檢查
+            const maxLen = Math.max(expChars.length, actChars.length);
+            let pronounCheckCount = 0;
+            let pronounErrorCount = 0;
+            
+            for (let i = 0; i < maxLen; i++) {
+                const expChar = expChars[i] || '';
+                const actChar = actChars[i] || '';
+                
+                const expIsPronoun = PRONOUNS.has(expChar);
+                const actIsPronoun = PRONOUNS.has(actChar);
+                
+                if (expIsPronoun || actIsPronoun) {
+                    pronounCheckCount++;
+                    consoleLog.push('');
+                    consoleLog.push(`[位置 ${i}] 🎯 代詞關鍵位置檢查:`);
+                    consoleLog.push(`  預期: "${expChar}" ${expIsPronoun ? '(✓ 是代詞)' : '(✗ 非代詞)'}`);
+                    consoleLog.push(`  實際: "${actChar}" ${actIsPronoun ? '(✓ 是代詞)' : '(✗ 非代詞)'}`);
+                    
+                    if (expIsPronoun && !actChar) {
+                        const error = `位置 ${i}: 缺少代詞 "${expChar}"`;
+                        errors.push(error);
+                        mismatchPositions.push(i);
+                        pronounErrorCount++;
+                        consoleLog.push(`  ❌❌❌ 嚴重錯誤: 缺少必需的代詞 "${expChar}"`);
+                    } else if (expIsPronoun && actChar && !actIsPronoun) {
+                        const error = `位置 ${i}: 預期代詞 "${expChar}"，實際是非代詞 "${actChar}"`;
+                        errors.push(error);
+                        mismatchPositions.push(i);
+                        pronounErrorCount++;
+                        consoleLog.push(`  ❌❌❌ 嚴重錯誤: 應該是代詞，卻說成了其他字`);
+                        consoleLog.push(`      → 預期: "${expChar}" (代詞)`);
+                        consoleLog.push(`      → 實際: "${actChar}" (不是代詞)`);
+                    } else if (expIsPronoun && actIsPronoun && expChar !== actChar) {
+                        const error = `位置 ${i}: 代詞不匹配 - 預期 "${expChar}"，實際 "${actChar}"`;
+                        errors.push(error);
+                        mismatchPositions.push(i);
+                        pronounErrorCount++;
+                        consoleLog.push(`  ❌❌❌ 致命錯誤: 代詞完全錯誤！`);
+                        consoleLog.push(`      → 預期代詞: "${expChar}"`);
+                        consoleLog.push(`      → 實際代詞: "${actChar}"`);
+                        consoleLog.push(`      → 這會改變句子的主語/賓語，意思完全不同！`);
+                        consoleLog.push(`      → 例如: "你" vs "我" 會讓問句變成陳述句`);
+                    } else if (!expIsPronoun && actIsPronoun) {
+                        const error = `位置 ${i}: 不應該有代詞，卻出現了 "${actChar}"`;
+                        errors.push(error);
+                        mismatchPositions.push(i);
+                        pronounErrorCount++;
+                        consoleLog.push(`  ❌❌❌ 錯誤: 多餘的代詞 "${actChar}"`);
+                        consoleLog.push(`      → 預期: "${expChar || '(無字符)'}"`);
+                        consoleLog.push(`      → 實際: "${actChar}" (多餘的代詞)`);
+                    } else if (expIsPronoun && actIsPronoun && expChar === actChar) {
+                        consoleLog.push(`  ✅✅✅ 完美: 代詞 "${expChar}" 位置和內容 100% 正確`);
+                    }
+                }
+            }
+            
+            const valid = errors.length === 0 && pronounErrorCount === 0;
+            
+            consoleLog.push('');
+            consoleLog.push('━'.repeat(80));
+            consoleLog.push('📊 【槽位檢查結果】');
+            consoleLog.push('━'.repeat(80));
+            consoleLog.push(`  ✓ 檢查的代詞位置數: ${pronounCheckCount}`);
+            consoleLog.push(`  ✗ 代詞錯誤數: ${pronounErrorCount}`);
+            consoleLog.push(`  ✗ 總錯誤數: ${errors.length}`);
+            consoleLog.push(`  ✗ 錯誤位置: ${mismatchPositions.length > 0 ? '[' + mismatchPositions.join(', ') + ']' : '無'}`);
+            consoleLog.push(`  🎯 最終判定: ${valid ? '✅✅✅ VALID (通過)' : '❌❌❌ INVALID (失敗)'}`);
+            
+            if (!valid) {
+                consoleLog.push('');
+                consoleLog.push('⚠️  【錯誤詳情列表】');
+                errors.forEach((err, idx) => {
+                    consoleLog.push(`  ${idx + 1}. ${err}`);
+                });
+                consoleLog.push('');
+                consoleLog.push('💡 提示: 代詞錯誤會導致句子意思完全改變，必須重新錄音！');
+            }
+            
+            consoleLog.push('━'.repeat(80));
+            
+            return {
+                valid,
+                errors,
+                mismatchPositions,
+                consoleLog: consoleLog.join('\n')
+            };
+        }
+
+        // 🧪 測試案例
+        const testCases = [
+            {
+                name: '測試 1: 代詞錯誤 "我" vs "你"',
+                expected: '你叫什麼名字',
+                actual: '我叫什麼名字',
+                shouldPass: false,
+                description: '最常見的代詞錯誤，必須檢測到並失敗'
+            },
+            {
+                name: '測試 2: 完全正確',
+                expected: '你叫什麼名字',
+                actual: '你叫什麼名字',
+                shouldPass: true,
+                description: '完全正確的答案應該通過'
+            },
+            {
+                name: '測試 3: 缺少代詞',
+                expected: '你好嗎',
+                actual: '好嗎',
+                shouldPass: false,
+                description: '缺少必需的代詞應該失敗'
+            },
+            {
+                name: '測試 4: 多餘代詞',
+                expected: '叫什麼名字',
+                actual: '你叫什麼名字',
+                shouldPass: false,
+                description: '多了不該有的代詞應該失敗'
+            },
+            {
+                name: '測試 5: 他/她/它',
+                expected: '他是誰',
+                actual: '她是誰',
+                shouldPass: false,
+                description: '第三人稱代詞錯誤也要檢測'
+            },
+            {
+                name: '測試 6: 包含標點符號',
+                expected: '你好嗎？',
+                actual: '我好嗎',
+                shouldPass: false,
+                description: '即使有標點符號也要正確檢測代詞錯誤'
+            },
+            {
+                name: '測試 7: 您（敬語）',
+                expected: '您好',
+                actual: '你好',
+                shouldPass: false,
+                description: '您和你是不同的代詞，應該檢測到'
+            },
+            {
+                name: '測試 8: 完全正確（敬語）',
+                expected: '您好',
+                actual: '您好',
+                shouldPass: true,
+                description: '使用正確的敬語應該通過'
+            }
+        ];
+
+        // 執行所有測試
+        function runAllTests() {
+            const resultsDiv = document.getElementById('results');
+            const summaryDiv = document.getElementById('summary');
+            resultsDiv.innerHTML = '';
+            
+            let passed = 0;
+            let failed = 0;
+            
+            testCases.forEach((testCase, index) => {
+                const result = checkKeySlots(testCase.expected, testCase.actual);
+                const testPassed = (result.valid === testCase.shouldPass);
+                
+                if (testPassed) {
+                    passed++;
+                } else {
+                    failed++;
+                }
+                
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test-case';
+                testDiv.innerHTML = `
+                    <div class="test-header">
+                        <div class="test-title">${testCase.name}</div>
+                        <div class="test-status ${testPassed ? 'status-pass' : 'status-fail'}">
+                            ${testPassed ? '✅ 通過' : '❌ 失敗'}
+                        </div>
+                    </div>
+                    <div class="test-content">
+                        <div class="test-row">
+                            <div class="test-label">說明：</div>
+                            <div class="test-value">${testCase.description}</div>
+                        </div>
+                        <div class="test-row">
+                            <div class="test-label">預期文本：</div>
+                            <div class="test-value expected-value">"${testCase.expected}"</div>
+                        </div>
+                        <div class="test-row">
+                            <div class="test-label">實際文本：</div>
+                            <div class="test-value actual-value">"${testCase.actual}"</div>
+                        </div>
+                        <div class="test-row">
+                            <div class="test-label">預期結果：</div>
+                            <div class="test-value">${testCase.shouldPass ? '✅ 應該通過' : '❌ 應該失敗'}</div>
+                        </div>
+                        <div class="test-row">
+                            <div class="test-label">實際結果：</div>
+                            <div class="test-value ${result.valid === testCase.shouldPass ? 'expected-value' : 'error-value'}">
+                                ${result.valid ? '✅ 通過槽位檢查' : '❌ 未通過槽位檢查'}
+                                ${testPassed ? '' : ' ⚠️ 不符合預期！'}
+                            </div>
+                        </div>
+                        ${result.errors.length > 0 ? `
+                        <div class="test-row">
+                            <div class="test-label">檢測到的錯誤：</div>
+                            <div class="test-value error-value">
+                                ${result.errors.map((e, i) => `${i + 1}. ${e}`).join('<br>')}
+                            </div>
+                        </div>
+                        ` : ''}
+                        <div class="console-output">${result.consoleLog}</div>
+                    </div>
+                `;
+                resultsDiv.appendChild(testDiv);
+            });
+            
+            // 顯示總結
+            const totalTests = testCases.length;
+            const passRate = ((passed / totalTests) * 100).toFixed(1);
+            
+            summaryDiv.innerHTML = `
+                <div class="summary">
+                    <h2>📊 測試結果總結</h2>
+                    <div class="summary-stats">
+                        <div class="stat">
+                            <div class="stat-number">${totalTests}</div>
+                            <div class="stat-label">總測試數</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" style="color: #2ecc71;">${passed}</div>
+                            <div class="stat-label">通過</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" style="color: #e74c3c;">${failed}</div>
+                            <div class="stat-label">失敗</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${passRate}%</div>
+                            <div class="stat-label">通過率</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 18px;">
+                        ${passed === totalTests ? 
+                            '🎉 完美！所有測試都通過了！' : 
+                            `⚠️ 還有 ${failed} 個測試失敗，需要修復`
+                        }
+                    </p>
+                </div>
+            `;
+            
+            // 滾動到頂部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 頁面載入時自動執行測試
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

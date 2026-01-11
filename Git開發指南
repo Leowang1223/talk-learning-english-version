@@ -1,0 +1,94 @@
+Git 開發指南（Push / Pull 規範與準則，指令版）
+
+以下以「可直接複製執行」為原則整理。預設主線為 main，功能分支以 feature/<name> 命名。
+
+0. 一次性全域設定（建議先執行）
+# 將新專案的預設分支改為 main
+git config --global init.defaultBranch main
+
+# 推送策略：更安全（僅推到當前分支對應的上游）
+git config --global push.default simple
+
+# 取回更新時預設使用 rebase（保持線性歷史）
+git config --global pull.rebase true
+
+1. 取得／更新主線
+# 首次取得專案
+git clone <repo-url>
+cd <repo-dir>
+
+# 之後每次開工前，更新本地 main
+git checkout main
+git fetch origin
+git pull --rebase origin main
+
+2. 新功能開發（從 main 開分支）
+# 基於最新 main 建立功能分支
+git checkout main
+git pull --rebase origin main
+git checkout -b feature/<name>
+
+# 開發、選擇性小步提交
+git add .
+git commit -m "feat: <說明>"
+
+# 首次推送功能分支並建立上游追蹤
+git push -u origin feature/<name>
+
+3. 日常同步循環（避免晚期大衝突）
+# 在 feature 分支上，週期性與 main 對齊
+git checkout feature/<name>
+git fetch origin
+git pull --rebase origin main
+# 若之前已推送過，rebase 後更新遠端
+git push --force-with-lease
+
+
+若工作目錄尚有未提交變更：
+
+# 暫存未提交變更（含未追蹤新檔）
+git stash -u
+git fetch origin
+git pull --rebase origin main
+git stash pop
+# 如有衝突：解衝突 → git add <檔案> → git rebase --continue
+
+4. 提交與推送規範
+# 檢視當前狀態與上游追蹤
+git status
+git branch -vv
+
+# 選擇性精細加入變更（建議小步提交）
+git add -p
+git commit -m "feat: <說明>"
+git commit -m "fix: <說明>"
+git commit -m "chore: <說明>"
+
+# 推送到對應的遠端功能分支
+git push
+# 若 rebase 過（歷史被重寫）
+git push --force-with-lease
+
+5. 完成功能後的合併（PR 為準）
+
+A. 推進 PR 前對齊主線
+
+git checkout feature/<name>
+git fetch origin
+git pull --rebase origin main
+git push --force-with-lease
+
+
+B. 在 GitHub 建立 Pull Request
+
+base：main
+
+compare：feature/<name>
+
+CI 全綠、Review 通過後「Squash and merge」或「Rebase and merge」
+
+C. 合併收尾
+
+# 刪除本地與遠端功能分支
+git branch -d feature/<name>
+git push origin --delete feature/<name>

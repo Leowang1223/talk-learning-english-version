@@ -1,0 +1,210 @@
+{
+  "scenario_id": "phone-call-01",
+  "title": "Making a Phone Reservation",
+  "chineseTitle": "電話預約",
+  "description": "Practice making a phone reservation in Chinese",
+  "chineseDescription": "練習中文電話預約對話",
+  "difficulty": "A2-B1",
+  "category": "Daily Life",
+  "objective": "Successfully make a phone reservation",
+  "chineseObjective": "成功完成電話預約",
+  "estimatedTurns": 12,
+  "firstSpeaker": "user",
+  "defaultUserRole": "caller",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Greet and introduce purpose",
+      "chineseDescription": "打招呼並說明目的",
+      "keywords": [
+        "hello",
+        "hello",
+        "hi",
+        "I'd like to",
+        "book",
+        "book",
+        "reservation",
+        "I'd like to book",
+        "I'd like to book"
+      ],
+      "weight": 15
+    },
+    {
+      "id": 2,
+      "description": "Specify date and time",
+      "chineseDescription": "指定日期和時間",
+      "keywords": [
+        "time",
+        "date",
+        "what time",
+        "day of the week",
+        "day",
+        "when",
+        "week",
+        "tomorrow",
+        "today",
+        "afternoon",
+        "evening"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Provide details (number of people, type, etc.)",
+      "chineseDescription": "提供詳細信息",
+      "keywords": [
+        "person",
+        "how many people",
+        "type",
+        "kind",
+        "need",
+        "how many people",
+        "two people",
+        "three people",
+        "four people"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 4,
+      "description": "Confirm booking details",
+      "chineseDescription": "確認預約詳情",
+      "keywords": [
+        "confirm",
+        "right",
+        "correct",
+        "yes",
+        "that's right",
+        "okay",
+        "OK",
+        "correct"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 5,
+      "description": "Provide contact information",
+      "chineseDescription": "提供聯絡方式",
+      "keywords": [
+        "phone",
+        "name",
+        "number",
+        "contact",
+        "cellphone",
+        "full name",
+        "called"
+      ],
+      "weight": 10
+    },
+    {
+      "id": 6,
+      "description": "Thank and end call",
+      "chineseDescription": "道謝並結束通話",
+      "keywords": [
+        "thank you",
+        "goodbye",
+        "okay"
+      ],
+      "weight": 5
+    }
+  ],
+  "roles": [
+    {
+      "id": "caller",
+      "name": "Caller",
+      "chineseName": "來電者",
+      "systemPrompt": "You are making a phone reservation (restaurant, doctor, salon, etc.) . Be clear about what you want. Provide necessary information. Confirm details. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences)."
+    },
+    {
+      "id": "staff",
+      "name": "Staff Member",
+      "chineseName": "服務人員",
+      "interviewerImage": "coffee waiter.jpg",
+      "interviewerId": "man",
+      "systemPrompt": "You are staff taking phone reservations . Ask for date, time, number of people, and contact information. Confirm details clearly. Be friendly and professional. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences)."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "caller": [
+        {
+          "chinese": "您好，我想預約一個位子。",
+          "english": "Hello, I'd like to make a reservation.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "明天晚上七點可以嗎？",
+          "english": "Is 7 PM tomorrow evening okay?",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "四個人。",
+          "english": "Four people.",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "我的電話號碼是...",
+          "english": "My phone number is...",
+          "type": "safe",
+          "checkpointId": 5
+        },
+        {
+          "chinese": "好的，謝謝你。",
+          "english": "Okay, thank you.",
+          "type": "safe",
+          "checkpointId": 6
+        }
+      ],
+      "staff": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "reservation/appointment",
+      "chinese": "預約"
+    },
+    {
+      "english": "time",
+      "chinese": "時間"
+    },
+    {
+      "english": "date",
+      "chinese": "日期"
+    },
+    {
+      "english": "phone",
+      "chinese": "電話"
+    },
+    {
+      "english": "confirm",
+      "chinese": "確認"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I would like to...",
+      "chinese": "我想...",
+      "example": "我想預約一個位子"
+    },
+    {
+      "pattern": "Is ... okay?",
+      "chinese": "...可以嗎？",
+      "example": "明天晚上七點可以嗎？"
+    },
+    {
+      "pattern": "My ... is...",
+      "chinese": "我的...是...",
+      "example": "我的電話號碼是..."
+    }
+  ],
+  "tags": [
+    "phone",
+    "reservation",
+    "daily-life"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

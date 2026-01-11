@@ -1,0 +1,123 @@
+{
+  "lesson_id": "C1-L04",
+  "chapter_id": "C1",
+  "lesson_number": 4,
+  "title": "Time",
+  "description": "Learn basic time expressions.",
+  "steps": [
+    {
+      "id": 1,
+      "teacher": "Today",
+      "expected_answer": [
+        "Today."
+      ],
+      "chinese_hint": "今天",
+      "encouragement": "Great start!",
+      "tts_text": "Today",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 2,
+      "teacher": "Tomorrow",
+      "expected_answer": [
+        "Tomorrow."
+      ],
+      "chinese_hint": "明天",
+      "encouragement": "Nice! Keep going!",
+      "tts_text": "Tomorrow",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 3,
+      "teacher": "Yesterday",
+      "expected_answer": [
+        "Yesterday."
+      ],
+      "chinese_hint": "昨天",
+      "encouragement": "Good job!",
+      "tts_text": "Yesterday",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 4,
+      "teacher": "Morning.",
+      "expected_answer": [
+        "Morning."
+      ],
+      "chinese_hint": "早安 (zǎo ān) / 早上好 (zǎo shang hǎo)",
+      "encouragement": "Well done!",
+      "tts_text": "Morning.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 5,
+      "teacher": "Afternoon.",
+      "expected_answer": [
+        "Afternoon."
+      ],
+      "chinese_hint": "下午",
+      "encouragement": "Great work!",
+      "tts_text": "Afternoon.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 6,
+      "teacher": "Evening.",
+      "expected_answer": [
+        "Evening."
+      ],
+      "chinese_hint": "晚上 / 傍晚 (depending on the context, 晚上 is more general, 傍晚 is closer to dusk)",
+      "encouragement": "Excellent!",
+      "tts_text": "Evening.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 7,
+      "teacher": "Right now.",
+      "expected_answer": [
+        "Right now."
+      ],
+      "chinese_hint": "現在",
+      "encouragement": "Perfect!",
+      "tts_text": "Right now.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 8,
+      "teacher": "Hold on.",
+      "expected_answer": [
+        "Wait a second."
+      ],
+      "chinese_hint": "等一下 / 晚點 / 待會兒",
+      "encouragement": "You're doing well!",
+      "tts_text": "Hold on.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 9,
+      "teacher": "hour",
+      "expected_answer": [
+        "Hour"
+      ],
+      "chinese_hint": "小時 / 鐘頭",
+      "encouragement": "Nice job!",
+      "tts_text": "hour",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 10,
+      "teacher": "Minute",
+      "expected_answer": [
+        "Minute"
+      ],
+      "chinese_hint": "分鐘 (fēn zhōng)",
+      "encouragement": "Awesome!",
+      "tts_text": "Minute",
+      "tts_voice": "en-US-JennyNeural"
+    }
+  ],
+  "review": {
+    "summary": "You learned common time-related words.",
+    "mission": "Next: Learn basic family vocabulary!"
+  }
+}

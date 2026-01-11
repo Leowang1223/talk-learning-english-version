@@ -1,0 +1,183 @@
+{
+  "scenario_id": "doctor-appointment-01",
+  "title": "Visiting the Doctor",
+  "chineseTitle": "看醫生",
+  "description": "Practice describing symptoms and understanding medical advice",
+  "chineseDescription": "練習描述症狀和理解醫療建議",
+  "difficulty": "A2-B1",
+  "category": "Healthcare",
+  "objective": "Describe your symptoms and understand the doctor's advice",
+  "chineseObjective": "描述症狀並理解醫生的建議",
+  "estimatedTurns": 10,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "patient",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Explain symptoms clearly",
+      "chineseDescription": "清楚說明症狀",
+      "keywords": [
+        "cough",
+        "headache",
+        "fever",
+        "uncomfortable",
+        "pain",
+        "symptom",
+        "feeling",
+        "recently",
+        "constantly",
+        "throat",
+        "stomach",
+        "runny nose",
+        "sick"
+      ],
+      "weight": 30
+    },
+    {
+      "id": 2,
+      "description": "Answer doctor's questions about medical history",
+      "chineseDescription": "回答醫生關於病史的問題",
+      "keywords": [
+        "have",
+        "don't have",
+        "allergy",
+        "medication",
+        "before",
+        "medical history",
+        "family",
+        "is",
+        "is not",
+        "how many days",
+        "when",
+        "from",
+        "start",
+        "approximately"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Acknowledge diagnosis and confirm understanding",
+      "chineseDescription": "回應診斷並確認理解",
+      "keywords": [
+        "I understand",
+        "I understand",
+        "Got it",
+        "Okay",
+        "Clear",
+        "I get it",
+        "I see",
+        "Oh, I see",
+        "Need",
+        "Good"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 4,
+      "description": "Thank the doctor",
+      "chineseDescription": "感謝醫生",
+      "keywords": [
+        "thank you",
+        "grateful",
+        "sorry for the trouble",
+        "thanks for your hard work",
+        "thanks"
+      ],
+      "weight": 20
+    }
+  ],
+  "roles": [
+    {
+      "id": "patient",
+      "name": "Patient",
+      "chineseName": "病人",
+      "systemPrompt": "You are a patient visiting the doctor  because you don't feel well. Describe your symptoms clearly. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences). Be honest about how you feel."
+    },
+    {
+      "id": "doctor",
+      "name": "Doctor",
+      "chineseName": "醫生",
+      "interviewerImage": "Doctor.jpg",
+      "interviewerId": "john",
+      "systemPrompt": "You are a caring doctor . Ask about symptoms, when they started, and provide diagnosis and treatment advice. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (2-3 sentences). Be professional and reassuring."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "patient": [
+        {
+          "chinese": "我最近一直咳嗽，頭也很痛。",
+          "english": "I've been coughing a lot recently, and my head hurts a lot.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "從三天前開始的，有點發燒。",
+          "english": "It started three days ago, and I have a slight fever.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "好的，我明白了。",
+          "english": "Okay, I understand.",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "謝謝醫生，辛苦了。",
+          "english": "Thank you doctor, you've worked hard.",
+          "type": "safe",
+          "checkpointId": 4
+        }
+      ],
+      "doctor": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "not feeling well",
+      "chinese": "不舒服"
+    },
+    {
+      "english": "symptoms",
+      "chinese": "症狀"
+    },
+    {
+      "english": "headache",
+      "chinese": "頭痛"
+    },
+    {
+      "english": "fever",
+      "chinese": "發燒"
+    },
+    {
+      "english": "take medicine",
+      "chinese": "吃藥"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I have...",
+      "chinese": "我...",
+      "example": "我頭痛"
+    },
+    {
+      "pattern": "Started from...",
+      "chinese": "從...開始",
+      "example": "從昨天開始"
+    },
+    {
+      "pattern": "Do you have...?",
+      "chinese": "有沒有...?",
+      "example": "有沒有發燒?"
+    }
+  ],
+  "tags": [
+    "healthcare",
+    "doctor",
+    "medical"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

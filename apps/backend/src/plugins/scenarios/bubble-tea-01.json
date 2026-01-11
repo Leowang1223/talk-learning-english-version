@@ -1,0 +1,180 @@
+{
+  "scenario_id": "bubble-tea-01",
+  "title": "Ordering at a Bubble Tea Shop",
+  "chineseTitle": "珍珠奶茶店點餐",
+  "description": "Practice ordering drinks at a bubble tea shop",
+  "chineseDescription": "在珍珠奶茶店點飲料",
+  "difficulty": "A0-A1",
+  "category": "Food & Beverage",
+  "objective": "Successfully order a customized bubble tea drink",
+  "chineseObjective": "成功訂製珍珠奶茶",
+  "estimatedTurns": 8,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "customer",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Order drink type",
+      "chineseDescription": "點飲料種類",
+      "keywords": [
+        "bubble tea",
+        "black tea",
+        "green tea",
+        "oolong tea",
+        "Yakult",
+        "I want",
+        "I'll have a cup of",
+        "order"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 2,
+      "description": "Choose sweetness level",
+      "chineseDescription": "選擇甜度",
+      "keywords": [
+        "sugar-free",
+        "slightly sweet",
+        "half sugar",
+        "less sugar",
+        "full sugar",
+        "regular",
+        "sweetness level"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Choose ice level",
+      "chineseDescription": "選擇冰量",
+      "keywords": [
+        "no ice",
+        "easy ice",
+        "less ice",
+        "regular ice",
+        "hot",
+        "ice level",
+        "warm"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 4,
+      "description": "Confirm and pay",
+      "chineseDescription": "確認並付款",
+      "keywords": [
+        "okay",
+        "correct",
+        "that's right",
+        "how much",
+        "cash",
+        "credit card",
+        "thank you"
+      ],
+      "weight": 25
+    }
+  ],
+  "roles": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "chineseName": "顧客",
+      "systemPrompt": "You are a customer ordering drinks at a bubble tea shop. Choose your drink, sweetness level, and ice level. IMPORTANT: Use natural, conversational American English with common bubble tea terms. Keep responses concise (1-2 sentences). Be casual and friendly."
+    },
+    {
+      "id": "staff",
+      "name": "Staff Member",
+      "chineseName": "店員",
+      "interviewerImage": "bubble tea shop waitress.png",
+      "interviewerId": "elmily",
+      "systemPrompt": "You are staff at a bubble tea shop. Take orders, ask about sweetness level and ice level. IMPORTANT: Use natural, conversational American English. Keep responses concise and efficient (1-2 sentences). Be friendly and helpful."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "customer": [
+        {
+          "chinese": "我要一杯珍珠奶茶。",
+          "english": "I want a bubble milk tea.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "微糖。",
+          "english": "Less sugar.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "去冰，謝謝。",
+          "english": "No ice, thank you.",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "對，就這樣。多少錢？",
+          "english": "Yes, that's it. How much?",
+          "type": "safe",
+          "checkpointId": 4
+        }
+      ],
+      "staff": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "bubble milk tea",
+      "chinese": "珍珠奶茶"
+    },
+    {
+      "english": "tapioca pearls/boba",
+      "chinese": "珍珠"
+    },
+    {
+      "english": "sweetness level",
+      "chinese": "甜度"
+    },
+    {
+      "english": "ice level",
+      "chinese": "冰量"
+    },
+    {
+      "english": "less sugar",
+      "chinese": "微糖"
+    },
+    {
+      "english": "no ice",
+      "chinese": "去冰"
+    },
+    {
+      "english": "half sugar",
+      "chinese": "半糖"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I want...",
+      "chinese": "我要...",
+      "example": "我要一杯珍珠奶茶"
+    },
+    {
+      "pattern": "Sweetness... ice level...",
+      "chinese": "甜度...冰量...",
+      "example": "甜度微糖，冰量去冰"
+    },
+    {
+      "pattern": "..., thank you",
+      "chinese": "...，謝謝",
+      "example": "去冰，謝謝"
+    }
+  ],
+  "tags": [
+    "bubble-tea",
+    "drinks",
+    "taiwanese-food",
+    "daily-life",
+    "A0-A1"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

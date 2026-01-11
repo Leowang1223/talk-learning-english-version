@@ -1,0 +1,124 @@
+{
+  "lesson_id": "C1-L01",
+  "chapter_id": "C1",
+  "lesson_number": 1,
+  "title": "Greetings",
+  "description": "Learn the most basic daily greetings.",
+  "steps": [
+    {
+      "id": 1,
+      "teacher": "Hello.",
+      "expected_answer": [
+        "Hello."
+      ],
+      "chinese_hint": "你好",
+      "encouragement": "Great job! You're learning basic greetings!",
+      "tts_text": "Hello.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 2,
+      "teacher": "Thanks.",
+      "expected_answer": [
+        "Thanks."
+      ],
+      "chinese_hint": "謝謝你",
+      "encouragement": "Nice! Using polite words is important!",
+      "tts_text": "Thanks.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 3,
+      "teacher": "Goodbye.",
+      "expected_answer": [
+        "Goodbye."
+      ],
+      "chinese_hint": "再見",
+      "encouragement": "Perfect! You can say goodbye now!",
+      "tts_text": "Goodbye.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 4,
+      "teacher": "Sorry.",
+      "expected_answer": [
+        "Sorry."
+      ],
+      "chinese_hint": "不好意思",
+      "encouragement": "Well done! You're learning polite expressions!",
+      "tts_text": "Sorry.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 5,
+      "teacher": "Please.",
+      "expected_answer": [
+        "Please."
+      ],
+      "chinese_hint": "麻煩你。",
+      "encouragement": "Excellent! Keep going!",
+      "tts_text": "Please.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 6,
+      "teacher": "Good morning!",
+      "expected_answer": [
+        "Good morning."
+      ],
+      "chinese_hint": "早安",
+      "encouragement": "Great! You can greet people in the morning!",
+      "tts_text": "Good morning!",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 7,
+      "teacher": "Good night.",
+      "expected_answer": [
+        "Good night."
+      ],
+      "chinese_hint": "晚安",
+      "encouragement": "Good work! You’re doing well!",
+      "tts_text": "Good night.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 8,
+      "teacher": "How are you?",
+      "expected_answer": [
+        "How's it going?",
+        "How are you?"
+      ],
+      "chinese_hint": "你好嗎？",
+      "encouragement": "Awesome! You can start simple conversation!",
+      "tts_text": "How are you?",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 9,
+      "teacher": "I'm good.",
+      "expected_answer": [
+        "I'm good."
+      ],
+      "chinese_hint": "我沒事。",
+      "encouragement": "Perfect answer!",
+      "tts_text": "I'm good.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 10,
+      "teacher": "No worries.",
+      "expected_answer": [
+        "No problem."
+      ],
+      "chinese_hint": "沒關係",
+      "encouragement": "Nice! Your Chinese sounds natural!",
+      "tts_text": "No worries.",
+      "tts_voice": "en-US-JennyNeural"
+    }
+  ],
+  "review": {
+    "summary": "You learned the most essential greetings and polite expressions.",
+    "mission": "Next lesson: Learn how to introduce yourself."
+  }
+}

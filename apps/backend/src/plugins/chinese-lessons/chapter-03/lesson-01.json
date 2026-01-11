@@ -1,0 +1,123 @@
+{
+  "lesson_id": "C3-L1",
+  "chapter_id": "C3",
+  "lesson_number": 1,
+  "title": "Verb 是 (to be)",
+  "description": "Learn how to use 是 in simple sentences.",
+  "steps": [
+    {
+      "id": 1,
+      "teacher": "I'm a student.",
+      "expected_answer": [
+        "I'm a student."
+      ],
+      "chinese_hint": "我是學生。",
+      "encouragement": "Great! You used 是 correctly!",
+      "tts_text": "I'm a student.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 2,
+      "teacher": "Are you a teacher?",
+      "expected_answer": [
+        "Are you a teacher?"
+      ],
+      "chinese_hint": "你是老師嗎？",
+      "encouragement": "Nice question sentence!",
+      "tts_text": "Are you a teacher?",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 3,
+      "teacher": "He's my friend.",
+      "expected_answer": [
+        "He's my friend."
+      ],
+      "chinese_hint": "他是我朋友。",
+      "encouragement": "Good job forming a simple sentence!",
+      "tts_text": "He's my friend.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 4,
+      "teacher": "She's a doctor.",
+      "expected_answer": [
+        "She is a doctor."
+      ],
+      "chinese_hint": "她是個醫生。",
+      "encouragement": "Excellent! Keep going!",
+      "tts_text": "She's a doctor.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 5,
+      "teacher": "We're classmates.",
+      "expected_answer": [
+        "We're classmates."
+      ],
+      "chinese_hint": "我們是同學。",
+      "encouragement": "Great sentence!",
+      "tts_text": "We're classmates.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 6,
+      "teacher": "This is my home.",
+      "expected_answer": [
+        "This is my home."
+      ],
+      "chinese_hint": "這是我家。",
+      "encouragement": "Nice! Very natural Chinese!",
+      "tts_text": "This is my home.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 7,
+      "teacher": "That's the school.",
+      "expected_answer": [
+        "That's the school."
+      ],
+      "chinese_hint": "那是學校。",
+      "encouragement": "Well done!",
+      "tts_text": "That's the school.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 8,
+      "teacher": "Today is Monday.",
+      "expected_answer": [
+        "Today is Monday."
+      ],
+      "chinese_hint": "今天星期一。",
+      "encouragement": "Great! You used time with 是!",
+      "tts_text": "Today is Monday.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 9,
+      "teacher": "It's morning now.",
+      "expected_answer": [
+        "It's morning."
+      ],
+      "chinese_hint": "現在是早上了。",
+      "encouragement": "Perfect sentence!",
+      "tts_text": "It's morning now.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 10,
+      "teacher": "What is this?",
+      "expected_answer": [
+        "What's this?"
+      ],
+      "chinese_hint": "這是什麼？",
+      "encouragement": "Awesome question!",
+      "tts_text": "What is this?",
+      "tts_voice": "en-US-JennyNeural"
+    }
+  ],
+  "review": {
+    "summary": "You learned how to use 是 in basic sentences and questions.",
+    "mission": "Next lesson: Practice the verb 有 (to have)."
+  }
+}

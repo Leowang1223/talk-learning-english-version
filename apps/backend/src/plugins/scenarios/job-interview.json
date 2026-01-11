@@ -1,0 +1,213 @@
+{
+  "scenario_id": "job-interview-01",
+  "title": "Job Interview",
+  "chineseTitle": "工作面試",
+  "description": "Practice professional interview conversations in Chinese",
+  "chineseDescription": "練習中文專業面試對話",
+  "difficulty": "B2+",
+  "category": "Professional",
+  "objective": "Successfully complete a job interview conversation",
+  "chineseObjective": "成功完成工作面試對話",
+  "estimatedTurns": 15,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "candidate",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Professional greeting",
+      "chineseDescription": "專業問候",
+      "keywords": [
+        "Hello",
+        "Gladly",
+        "To meet",
+        "Interview",
+        "Interview",
+        "To see",
+        "My pleasure"
+      ],
+      "weight": 10
+    },
+    {
+      "id": 2,
+      "description": "Self introduction",
+      "chineseDescription": "自我介紹",
+      "keywords": [
+        "I am",
+        "My name is",
+        "Graduated",
+        "Experience",
+        "Background",
+        "Learning",
+        "From",
+        "Major",
+        "Background"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Discuss work experience",
+      "chineseDescription": "討論工作經驗",
+      "keywords": [
+        "work",
+        "company",
+        "in charge of",
+        "project",
+        "team",
+        "experience",
+        "before",
+        "previously",
+        "done"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 4,
+      "description": "Answer competency questions",
+      "chineseDescription": "回答能力問題",
+      "keywords": [
+        "ability",
+        "strengths",
+        "strengths",
+        "good at",
+        "problem solving",
+        "expertise",
+        "strengths",
+        "good at"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 5,
+      "description": "Ask questions about the company",
+      "chineseDescription": "詢問公司相關問題",
+      "keywords": [
+        "Excuse me",
+        "Company",
+        "Team",
+        "Work",
+        "Environment",
+        "Culture",
+        "I'd like to know",
+        "Can I ask",
+        "Team"
+      ],
+      "weight": 15
+    },
+    {
+      "id": 6,
+      "description": "Professional closing",
+      "chineseDescription": "專業結束",
+      "keywords": [
+        "thank you",
+        "opportunity",
+        "look forward to",
+        "contact",
+        "grateful",
+        "again",
+        "waiting"
+      ],
+      "weight": 5
+    }
+  ],
+  "roles": [
+    {
+      "id": "candidate",
+      "name": "Job Candidate",
+      "chineseName": "求職者",
+      "systemPrompt": "You are a job candidate being interviewed . Be professional, confident, and articulate. Highlight your skills and experience. Ask thoughtful questions about the company. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise but informative (2-3 sentences)."
+    },
+    {
+      "id": "interviewer",
+      "name": "Interviewer",
+      "chineseName": "面試官",
+      "interviewerImage": "job interviewer.jpg",
+      "interviewerId": "bob",
+      "systemPrompt": "You are a professional interviewer for a tech company . Ask about background, experience, skills, and motivations. Be professional but friendly. IMPORTANT: Use natural, conversational English naturally with American English. Keep questions clear and concise (1-2 sentences)."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "candidate": [
+        {
+          "chinese": "您好，很高興見到您。我是王明。",
+          "english": "Hello, nice to meet you. I'm Wang Ming.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "我畢業於州立大學，有三年的軟體開發經驗。",
+          "english": "I graduated from State University with 3 years of software development experience.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "我擅長團隊合作，也能獨立解決問題。",
+          "english": "I'm good at teamwork and can also solve problems independently.",
+          "type": "advanced",
+          "checkpointId": 4
+        },
+        {
+          "chinese": "請問公司的團隊文化是怎樣的？",
+          "english": "May I ask what the company's team culture is like?",
+          "type": "safe",
+          "checkpointId": 5
+        },
+        {
+          "chinese": "謝謝您今天給我這個機會。",
+          "english": "Thank you for this opportunity today.",
+          "type": "safe",
+          "checkpointId": 6
+        }
+      ],
+      "interviewer": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "interview",
+      "chinese": "面試"
+    },
+    {
+      "english": "experience",
+      "chinese": "經驗"
+    },
+    {
+      "english": "good at",
+      "chinese": "擅長"
+    },
+    {
+      "english": "team",
+      "chinese": "團隊"
+    },
+    {
+      "english": "ability",
+      "chinese": "能力"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I have... experience",
+      "chinese": "我有...經驗",
+      "example": "我有三年的工作經驗"
+    },
+    {
+      "pattern": "I'm good at...",
+      "chinese": "我擅長...",
+      "example": "我擅長團隊合作"
+    },
+    {
+      "pattern": "May I ask...",
+      "chinese": "請問...",
+      "example": "請問工作內容是什麼?"
+    }
+  ],
+  "tags": [
+    "professional",
+    "interview",
+    "career",
+    "business"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

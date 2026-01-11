@@ -1,0 +1,192 @@
+{
+  "scenario_id": "food-truck-01",
+  "title": "Ordering at a Food Truck",
+  "chineseTitle": "餐車點餐",
+  "description": "Practice ordering food at an American food truck",
+  "chineseDescription": "在美式餐車點餐",
+  "difficulty": "A0-A1",
+  "category": "Food & Beverage",
+  "objective": "Successfully order food at a food truck",
+  "chineseObjective": "成功在餐車點餐",
+  "estimatedTurns": 7,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "customer",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Ask about food and order",
+      "chineseDescription": "詢問並點餐",
+      "keywords": [
+        "what's up",
+        "I want",
+        "I'll have",
+        "burger",
+        "taco",
+        "hot dog",
+        "sandwich",
+        "this one",
+        "how much",
+        "excuse me",
+        "can I get"
+      ],
+      "weight": 30
+    },
+    {
+      "id": 2,
+      "description": "Choose toppings or sides",
+      "chineseDescription": "選擇配料或小菜",
+      "keywords": [
+        "fries",
+        "cheese",
+        "bacon",
+        "lettuce",
+        "tomato",
+        "onions",
+        "pickles",
+        "sauce",
+        "ketchup",
+        "mustard",
+        "mayo",
+        "do you want",
+        "with"
+      ],
+      "weight": 30
+    },
+    {
+      "id": 3,
+      "description": "Pay and receive food",
+      "chineseDescription": "付款取餐",
+      "keywords": [
+        "How much",
+        "total",
+        "cash",
+        "card",
+        "Here",
+        "Thank you",
+        "change",
+        "receipt"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 4,
+      "description": "Thank vendor",
+      "chineseDescription": "感謝店家",
+      "keywords": [
+        "thank you",
+        "thanks",
+        "appreciate it",
+        "have a good day"
+      ],
+      "weight": 15
+    }
+  ],
+  "roles": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "chineseName": "顧客",
+      "systemPrompt": "You are a customer ordering food at an American food truck. Ask about the menu, order items, and choose toppings. IMPORTANT: Use natural, conversational American English. Keep responses concise (1-2 sentences). Be friendly and casual."
+    },
+    {
+      "id": "vendor",
+      "name": "Food Truck Vendor",
+      "chineseName": "餐車老闆",
+      "interviewerImage": "night market waitor.png",
+      "interviewerId": "man",
+      "systemPrompt": "You are a friendly food truck vendor in the US. Describe your food, take orders, and ask about preferences (toppings, sides). IMPORTANT: Use natural, conversational American English with casual expressions. Keep responses concise (1-2 sentences). Be warm and enthusiastic about your food."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "customer": [
+        {
+          "chinese": "請問，這個漢堡多少錢？",
+          "english": "Excuse me, how much is this burger?",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "我要一個起司漢堡。",
+          "english": "I'll have a cheeseburger.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "加培根和起司，謝謝。",
+          "english": "Add bacon and cheese, please.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "好，謝謝！",
+          "english": "Okay, thank you!",
+          "type": "safe",
+          "checkpointId": 4
+        }
+      ],
+      "vendor": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "burger",
+      "chinese": "漢堡"
+    },
+    {
+      "english": "taco",
+      "chinese": "墨西哥捲餅"
+    },
+    {
+      "english": "hot dog",
+      "chinese": "熱狗"
+    },
+    {
+      "english": "fries",
+      "chinese": "薯條"
+    },
+    {
+      "english": "food truck",
+      "chinese": "餐車"
+    },
+    {
+      "english": "toppings",
+      "chinese": "配料"
+    },
+    {
+      "english": "vendor",
+      "chinese": "攤販"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "How much is...?",
+      "chinese": "...多少錢?",
+      "example": "How much is this burger?"
+    },
+    {
+      "pattern": "I'll have...",
+      "chinese": "我要...",
+      "example": "I'll have a cheeseburger"
+    },
+    {
+      "pattern": "Do you want...?",
+      "chinese": "要不要...?",
+      "example": "Do you want fries with that?"
+    },
+    {
+      "pattern": "With...",
+      "chinese": "加...",
+      "example": "With extra cheese"
+    }
+  ],
+  "tags": [
+    "food-truck",
+    "street-food",
+    "american-food",
+    "daily-life",
+    "A0-A1"
+  ],
+  "createdAt": "2025-01-11T00:00:00Z",
+  "isCustom": false
+}

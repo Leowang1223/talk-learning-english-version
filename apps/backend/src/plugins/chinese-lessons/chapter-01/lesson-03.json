@@ -1,0 +1,123 @@
+{
+  "lesson_id": "C1-L03",
+  "chapter_id": "C1",
+  "lesson_number": 3,
+  "title": "Numbers",
+  "description": "Learn basic numbers used in daily life.",
+  "steps": [
+    {
+      "id": 1,
+      "teacher": "One.",
+      "expected_answer": [
+        "One"
+      ],
+      "chinese_hint": "一",
+      "encouragement": "Great job! Keep counting!",
+      "tts_text": "One.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 2,
+      "teacher": "Two",
+      "expected_answer": [
+        "Two"
+      ],
+      "chinese_hint": "二",
+      "encouragement": "Nice! You're learning!",
+      "tts_text": "Two",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 3,
+      "teacher": "Three",
+      "expected_answer": [
+        "Three"
+      ],
+      "chinese_hint": "三",
+      "encouragement": "Good! Continue!",
+      "tts_text": "Three",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 4,
+      "teacher": "Four",
+      "expected_answer": [
+        "Four"
+      ],
+      "chinese_hint": "四",
+      "encouragement": "Excellent!",
+      "tts_text": "Four",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 5,
+      "teacher": "Five",
+      "expected_answer": [
+        "Five"
+      ],
+      "chinese_hint": "五",
+      "encouragement": "You're doing great!",
+      "tts_text": "Five",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 6,
+      "teacher": "Six",
+      "expected_answer": [
+        "Six"
+      ],
+      "chinese_hint": "六",
+      "encouragement": "Perfect!",
+      "tts_text": "Six",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 7,
+      "teacher": "Seven",
+      "expected_answer": [
+        "Seven"
+      ],
+      "chinese_hint": "七",
+      "encouragement": "Good work!",
+      "tts_text": "Seven",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 8,
+      "teacher": "Eight",
+      "expected_answer": [
+        "Eight"
+      ],
+      "chinese_hint": "八",
+      "encouragement": "Great progress!",
+      "tts_text": "Eight",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 9,
+      "teacher": "Nine",
+      "expected_answer": [
+        "Nine"
+      ],
+      "chinese_hint": "九",
+      "encouragement": "Awesome!",
+      "tts_text": "Nine",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 10,
+      "teacher": "Ten",
+      "expected_answer": [
+        "Ten"
+      ],
+      "chinese_hint": "十",
+      "encouragement": "Fantastic job!",
+      "tts_text": "Ten",
+      "tts_voice": "en-US-JennyNeural"
+    }
+  ],
+  "review": {
+    "summary": "You learned numbers from 1 to 10.",
+    "mission": "Next: Learn time-related words!"
+  }
+}

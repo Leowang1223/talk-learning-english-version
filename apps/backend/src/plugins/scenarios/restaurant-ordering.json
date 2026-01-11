@@ -1,0 +1,189 @@
+{
+  "scenario_id": "restaurant-ordering-01",
+  "title": "Ordering Food at a Restaurant",
+  "chineseTitle": "在餐廳點餐",
+  "description": "Practice ordering food and drinks in a Chinese restaurant",
+  "chineseDescription": "練習在中餐廳點餐和飲料",
+  "difficulty": "A0-A1",
+  "category": "Daily Life",
+  "objective": "Successfully order a meal and drinks",
+  "chineseObjective": "成功點餐和飲料",
+  "estimatedTurns": 8,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "customer",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Greet the waiter",
+      "chineseDescription": "向服務生打招呼",
+      "keywords": [
+        "hello",
+        "hello",
+        "good evening",
+        "good morning",
+        "good afternoon",
+        "excuse me",
+        "waiter"
+      ],
+      "weight": 15
+    },
+    {
+      "id": 2,
+      "description": "Request the menu",
+      "chineseDescription": "要求看菜單",
+      "keywords": [
+        "menu",
+        "menu",
+        "to look",
+        "give me",
+        "I'd like to see",
+        "what do you have",
+        "could you please give me"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 3,
+      "description": "Order main dish",
+      "chineseDescription": "點主菜",
+      "keywords": [
+        "I want",
+        "I want to eat",
+        "I'll take one",
+        "order",
+        "order",
+        "give me",
+        "I want one",
+        "I want to order"
+      ],
+      "weight": 30
+    },
+    {
+      "id": 4,
+      "description": "Order drinks",
+      "chineseDescription": "點飲料",
+      "keywords": [
+        "beverage",
+        "water",
+        "tea",
+        "coke",
+        "juice",
+        "drink",
+        "drinks",
+        "I'll have",
+        "want to drink"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 5,
+      "description": "Request the bill",
+      "chineseDescription": "要求買單",
+      "keywords": [
+        "pay the bill",
+        "check out",
+        "check",
+        "pay",
+        "how much",
+        "bill",
+        "settle the bill",
+        "pay the bill"
+      ],
+      "weight": 15
+    }
+  ],
+  "roles": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "chineseName": "顧客",
+      "systemPrompt": "You are a customer at a restaurant. You want to order food and drinks. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences). Guide the conversation through the checkpoints: greeting, requesting menu, ordering food, ordering drinks, and requesting the bill."
+    },
+    {
+      "id": "waiter",
+      "name": "Waiter",
+      "chineseName": "服務生",
+      "interviewerImage": "resturant waitor.jpg",
+      "interviewerId": "man",
+      "systemPrompt": "You are a friendly waiter at a restaurant. Greet customers warmly, take orders, and be helpful. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences). Recommend popular dishes when asked."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "customer": [
+        {
+          "chinese": "你好，我想看菜單。",
+          "english": "Hello, I'd like to see the menu.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "我要一份炒飯。",
+          "english": "I want a fried rice.",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "請給我一杯水。",
+          "english": "Please give me a glass of water.",
+          "type": "safe",
+          "checkpointId": 4
+        },
+        {
+          "chinese": "請買單。",
+          "english": "Check please.",
+          "type": "safe",
+          "checkpointId": 5
+        }
+      ],
+      "waiter": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "menu",
+      "chinese": "菜單"
+    },
+    {
+      "english": "order food",
+      "chinese": "點餐"
+    },
+    {
+      "english": "fried rice",
+      "chinese": "炒飯"
+    },
+    {
+      "english": "beverage",
+      "chinese": "飲料"
+    },
+    {
+      "english": "pay the bill",
+      "chinese": "買單"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I want...",
+      "chinese": "我要...",
+      "example": "我要一份炒飯"
+    },
+    {
+      "pattern": "Please give me...",
+      "chinese": "請給我...",
+      "example": "請給我一杯水"
+    },
+    {
+      "pattern": "Do you have...?",
+      "chinese": "有沒有...?",
+      "example": "有沒有菜單?"
+    }
+  ],
+  "tags": [
+    "restaurant",
+    "food",
+    "ordering",
+    "daily-life"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

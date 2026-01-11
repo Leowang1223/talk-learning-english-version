@@ -1,0 +1,123 @@
+{
+  "lesson_id": "C1-L02",
+  "chapter_id": "C1",
+  "lesson_number": 2,
+  "title": "Self Introduction",
+  "description": "Learn simple words for introducing yourself.",
+  "steps": [
+    {
+      "id": 1,
+      "teacher": "Me.",
+      "expected_answer": [
+        "Me."
+      ],
+      "chinese_hint": "我",
+      "encouragement": "Great start!",
+      "tts_text": "Me.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 2,
+      "teacher": "You.",
+      "expected_answer": [
+        "You"
+      ],
+      "chinese_hint": "你/妳",
+      "encouragement": "Nice! Basic pronouns are important!",
+      "tts_text": "You.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 3,
+      "teacher": "Name",
+      "expected_answer": [
+        "Name"
+      ],
+      "chinese_hint": "名字 (míng zi)",
+      "encouragement": "Good job!",
+      "tts_text": "Name",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 4,
+      "teacher": "I am...",
+      "expected_answer": [
+        "I am."
+      ],
+      "chinese_hint": "我是...",
+      "encouragement": "Well done!",
+      "tts_text": "I am...",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 5,
+      "teacher": "What's your name?",
+      "expected_answer": [
+        "What's your name?"
+      ],
+      "chinese_hint": "你叫什麼名字？",
+      "encouragement": "Excellent!",
+      "tts_text": "What's your name?",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 6,
+      "teacher": "Nice to meet you!",
+      "expected_answer": [
+        "Nice to meet you."
+      ],
+      "chinese_hint": "很高興認識你。",
+      "encouragement": "Great expression!",
+      "tts_text": "Nice to meet you!",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 7,
+      "teacher": "He / Him",
+      "expected_answer": [
+        "He/Him"
+      ],
+      "chinese_hint": "他 / 他 (depends on context, usually 他 is fine)",
+      "encouragement": "Good job!",
+      "tts_text": "He / Him",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 8,
+      "teacher": "She",
+      "expected_answer": [
+        "She"
+      ],
+      "chinese_hint": "她 / 她的",
+      "encouragement": "You're doing great!",
+      "tts_text": "She",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 9,
+      "teacher": "Us, we, or our, depending on the context.",
+      "expected_answer": [
+        "We"
+      ],
+      "chinese_hint": "我們 / 咱們 (depends on context)",
+      "encouragement": "Nice work!",
+      "tts_text": "Us, we, or our, depending on the context.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 10,
+      "teacher": "Friend",
+      "expected_answer": [
+        "Friend"
+      ],
+      "chinese_hint": "朋友",
+      "encouragement": "Perfect! Keep it up!",
+      "tts_text": "Friend",
+      "tts_voice": "en-US-JennyNeural"
+    }
+  ],
+  "review": {
+    "summary": "You can now introduce yourself and talk about basic personal info.",
+    "mission": "Next lesson: Learn numbers and counting!"
+  }
+}

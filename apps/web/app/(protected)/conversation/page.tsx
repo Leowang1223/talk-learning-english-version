@@ -1,0 +1,539 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { Mic, Video, VideoOff, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react'
+import { InterviewerSelector, getInterviewerImagePath, DEFAULT_INTERVIEWER } from '../lesson/components/InterviewerSelector'
+import ScenarioSelector from './components/ScenarioSelector'
+import RoleSelector from './components/RoleSelector'
+import { apiGetScenarioById, type Scenario } from '@/lib/api'
+
+interface LessonHistoryEntry {
+  sessionId: string
+  lessonId: string
+  lessonTitle: string
+  completedAt: string
+}
+
+interface CompletedChapter {
+  chapterId: string
+  title: string
+  lessonCount: number
+}
+
+// 所有可用章節列表
+const ALL_CHAPTERS = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10'] as const
+
+// 章節標題對照
+const CHAPTER_TITLES: Record<string, string> = {
+  'C1': 'Chapter 1: Basic Chinese',
+  'C2': 'Chapter 2: Intermediate Conversations',
+  'C3': 'Chapter 3: Advanced Topics',
+  'C4': 'Chapter 4: Daily Life',
+  'C5': 'Chapter 5: Social Situations',
+  'C6': 'Chapter 6: Business Chinese',
+  'C7': 'Chapter 7: Travel & Leisure',
+  'C8': 'Chapter 8: Cultural Topics',
+  'C9': 'Chapter 9: Professional Communication',
+  'C10': 'Chapter 10: Advanced Mastery'
+}
+
+export default function ConversationSetupPage() {
+  const router = useRouter()
+
+  // Permission states
+  const [micPermission, setMicPermission] = useState<'pending' | 'granted' | 'denied'>('pending')
+  const [cameraPermission, setCameraPermission] = useState<'pending' | 'granted' | 'denied'>('pending')
+  const [enableCamera, setEnableCamera] = useState(false)
+
+  // Chapter selection
+  const [completedChapters, setCompletedChapters] = useState<CompletedChapter[]>([])
+  const [selectedChapters, setSelectedChapters] = useState<string[]>([])
+  const [topicMode, setTopicMode] = useState<'selected' | 'all' | 'free' | 'scenario'>('all')
+
+  // Interviewer selection
+  const [currentInterviewer, setCurrentInterviewer] = useState<string>(DEFAULT_INTERVIEWER)
+  const [showInterviewerSelector, setShowInterviewerSelector] = useState(false)
+
+  // Scenario mode
+  const [showScenarioSelector, setShowScenarioSelector] = useState(false)
+  const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null)
+  const [showRoleSelector, setShowRoleSelector] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<string | null>(null)
+
+  // Track if any lessons completed
+  const [hasCompletedLessons, setHasCompletedLessons] = useState(false)
+
+  // Load completed lessons from history
+  useEffect(() => {
+    const savedInterviewer = localStorage.getItem('selectedInterviewer')
+    if (savedInterviewer) {
+      setCurrentInterviewer(savedInterviewer)
+    }
+
+    // 建立完成度對照表
+    const completionMap = new Map<string, number>()
+
+    const historyStr = localStorage.getItem('lessonHistory')
+    if (historyStr) {
+      try {
+        const history: LessonHistoryEntry[] = JSON.parse(historyStr)
+        setHasCompletedLessons(history.length > 0)
+
+        // 章節 ID 驗證正規表達式：只接受 C + 數字格式
+        const VALID_CHAPTER_PATTERN = /^C\d{1,2}$/
+
+        history.forEach(entry => {
+          const chapterId = entry.lessonId.split('-')[0]
+
+          // 只計算有效的章節 ID（過濾掉 L10, L3 等舊格式）
+          if (chapterId && VALID_CHAPTER_PATTERN.test(chapterId)) {
+            const existing = completionMap.get(chapterId)
+            completionMap.set(chapterId, (existing || 0) + 1)
+          }
+        })
+      } catch (error) {
+        console.error('Failed to load lesson history:', error)
+      }
+    }
+
+    // 建立章節列表：顯示所有章節並合併完成度資料
+    const chapters = ALL_CHAPTERS.map(chapterId => ({
+      chapterId,
+      title: CHAPTER_TITLES[chapterId],
+      lessonCount: completionMap.get(chapterId) || 0
+    }))
+
+    setCompletedChapters(chapters)
+  }, [])
+
+  // Request microphone permission
+  const requestMicPermission = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      stream.getTracks().forEach(track => track.stop()) // Stop immediately after permission
+      setMicPermission('granted')
+    } catch (error) {
+      console.error('Microphone permission denied:', error)
+      setMicPermission('denied')
+    }
+  }
+
+  // Request camera permission
+  const requestCameraPermission = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      stream.getTracks().forEach(track => track.stop())
+      setCameraPermission('granted')
+    } catch (error) {
+      console.error('Camera permission denied:', error)
+      setCameraPermission('denied')
+    }
+  }
+
+  // Toggle camera enable
+  const toggleCamera = async () => {
+    if (!enableCamera && cameraPermission === 'pending') {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+        stream.getTracks().forEach(track => track.stop())
+        setCameraPermission('granted')
+        setEnableCamera(true)
+      } catch (error) {
+        console.error('Camera permission denied:', error)
+        setCameraPermission('denied')
+      }
+    } else if (!enableCamera && cameraPermission === 'granted') {
+      setEnableCamera(true)
+    } else {
+      setEnableCamera(!enableCamera)
+    }
+  }
+
+  // Handle chapter selection
+  const toggleChapter = (chapterId: string) => {
+    setSelectedChapters(prev =>
+      prev.includes(chapterId)
+        ? prev.filter(id => id !== chapterId)
+        : [...prev, chapterId]
+    )
+  }
+
+  // Handle scenario selection
+  const handleScenarioSelect = async (scenarioId: string) => {
+    try {
+      const { scenario } = await apiGetScenarioById(scenarioId)
+      setSelectedScenario(scenario)
+      setShowScenarioSelector(false)
+      setShowRoleSelector(true)
+    } catch (error) {
+      console.error('Failed to load scenario:', error)
+      alert('載入情境失敗，請重試。')
+    }
+  }
+
+  // Handle role selection
+  const handleRoleSelect = (roleId: string) => {
+    setSelectedRole(roleId)
+    setShowRoleSelector(false)
+  }
+
+  // Handle start conversation
+  const handleStartConversation = () => {
+    if (micPermission !== 'granted') {
+      alert('需要麥克風權限才能開始對話。')
+      return
+    }
+
+    // Validate "all" mode has completed lessons
+    if (topicMode === 'all' && !hasCompletedLessons) {
+      alert('請先完成至少一個課程，才能使用「所有已完成課程」模式。')
+      return
+    }
+
+    // Validate scenario mode
+    if (topicMode === 'scenario' && (!selectedScenario || !selectedRole)) {
+      alert('請先選擇情境和角色。')
+      return
+    }
+
+    // Save settings to localStorage
+    const conversationSettings = {
+      interviewerId: currentInterviewer,
+      enableCamera,
+      topicMode,
+      selectedTopics: topicMode === 'selected' ? selectedChapters : [],
+      scenarioId: topicMode === 'scenario' ? selectedScenario?.scenario_id : undefined,
+      userRole: topicMode === 'scenario' ? selectedRole : undefined,
+    }
+    localStorage.setItem('conversationSettings', JSON.stringify(conversationSettings))
+
+    // Navigate to conversation chat page
+    router.push('/conversation/chat')
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Header */}
+      <div className="border-b bg-white shadow-sm">
+        <div className="w-full px-6 py-4">
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="text-sm text-gray-600 hover:text-gray-900"
+          >
+            ← 返回主控台
+          </button>
+          <h1 className="mt-2 text-2xl font-bold text-gray-900">AI 對話設定</h1>
+          <p className="mt-1 text-sm text-gray-600">
+            與 AI 教師即時練習英文
+          </p>
+        </div>
+      </div>
+
+      <div className="w-full px-6 py-8">
+        <div className="space-y-6">
+          {/* Step 1: Permissions */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-bold">
+                1
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900">權限設定</h2>
+            </div>
+
+            <div className="space-y-4">
+              {/* Microphone */}
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center gap-3">
+                  <Mic className="h-5 w-5 text-gray-600" />
+                  <div>
+                    <div className="font-medium text-gray-900">麥克風</div>
+                    <div className="text-sm text-gray-500">對話必需</div>
+                  </div>
+                </div>
+
+                {micPermission === 'pending' && (
+                  <button
+                    onClick={requestMicPermission}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  >
+                    授予權限
+                  </button>
+                )}
+                {micPermission === 'granted' && (
+                  <div className="flex items-center gap-2 text-green-600">
+                    <CheckCircle2 className="h-5 w-5" />
+                    <span className="text-sm font-medium">已授予</span>
+                  </div>
+                )}
+                {micPermission === 'denied' && (
+                  <div className="flex items-center gap-2 text-red-600">
+                    <AlertCircle className="h-5 w-5" />
+                    <span className="text-sm font-medium">已拒絕</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Camera */}
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center gap-3">
+                  {enableCamera ? (
+                    <Video className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <VideoOff className="h-5 w-5 text-gray-400" />
+                  )}
+                  <div>
+                    <div className="font-medium text-gray-900">相機</div>
+                    <div className="text-sm text-gray-500">選用 - 顯示您的畫面</div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={toggleCamera}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium ${
+                    enableCamera
+                      ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {enableCamera ? '關閉' : '開啟'}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 2: Select Interviewer */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-bold">
+                2
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900">選擇您的教師</h2>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowInterviewerSelector(true)}
+                className="group relative h-24 w-24 overflow-hidden rounded-xl border-2 border-gray-200 shadow-md transition-all hover:border-blue-400 hover:shadow-lg"
+              >
+                <Image
+                  src={getInterviewerImagePath(currentInterviewer)}
+                  alt="已選擇的教師"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all group-hover:bg-black/20">
+                  <span className="text-xs font-medium text-white opacity-0 group-hover:opacity-100">
+                    更換
+                  </span>
+                </div>
+              </button>
+
+              <div className="flex-1">
+                <p className="text-sm text-gray-600">
+                  每位教師都有獨特的聲音和教學風格。點擊更換。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 3: Topic Selection */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-bold">
+                3
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900">對話主題</h2>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  onClick={() => setTopicMode('all')}
+                  disabled={!hasCompletedLessons}
+                  className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all touch-manipulation ${
+                    topicMode === 'all'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : !hasCompletedLessons
+                        ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  所有已完成課程
+                </button>
+                <button
+                  onClick={() => setTopicMode('selected')}
+                  className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all touch-manipulation ${
+                    topicMode === 'selected'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  選擇特定章節
+                </button>
+                <button
+                  onClick={() => setTopicMode('free')}
+                  className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all touch-manipulation ${
+                    topicMode === 'free'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  自由對話
+                </button>
+                <button
+                  onClick={() => {
+                    setTopicMode('scenario')
+                    setShowScenarioSelector(true)
+                  }}
+                  className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all touch-manipulation ${
+                    topicMode === 'scenario'
+                      ? 'border-purple-500 bg-purple-50 text-purple-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  情境模式
+                </button>
+              </div>
+
+              {topicMode === 'all' && (
+                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                  {(() => {
+                    const lessonHistory = JSON.parse(localStorage.getItem('lessonHistory') || '[]')
+                    const completedCount = lessonHistory.length
+
+                    if (completedCount === 0) {
+                      return (
+                        <p className="text-sm text-amber-600">
+                          尚未完成任何課程，請先完成一些課程後再使用此功能。
+                        </p>
+                      )
+                    }
+
+                    return (
+                      <p className="text-sm text-blue-700">
+                        將從 {completedCount} 個已完成課程中隨機選擇最多 5 個進行複習對話
+                      </p>
+                    )
+                  })()}
+                </div>
+              )}
+
+              {topicMode === 'selected' && (
+                <div className="rounded-lg border border-gray-200 p-4">
+                  <p className="mb-3 text-sm font-medium text-gray-700">
+                    選擇要練習的章節：
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-60 sm:max-h-48 overflow-y-auto">
+                    {completedChapters.map(chapter => (
+                      <button
+                        key={chapter.chapterId}
+                        onClick={() => toggleChapter(chapter.chapterId)}
+                        className={`rounded-lg border px-3 py-2.5 sm:px-3 sm:py-2 text-center text-sm transition-all touch-manipulation ${
+                          selectedChapters.includes(chapter.chapterId)
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : chapter.lessonCount === 0
+                              ? 'border-gray-200 bg-gray-50 text-gray-400 hover:border-gray-300'
+                              : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="font-bold text-lg">{chapter.chapterId}</div>
+                        <div className="text-xs opacity-75">
+                          {chapter.lessonCount > 0
+                            ? `${chapter.lessonCount} 個已完成`
+                            : '尚未開始'
+                          }
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {topicMode === 'free' && (
+                <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+                  <p className="text-sm text-yellow-800">
+                    <strong>自由對話模式：</strong>AI 教師將進行開放式對話，不針對特定課程內容。
+                  </p>
+                </div>
+              )}
+
+              {topicMode === 'scenario' && selectedScenario && selectedRole && (
+                <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <p className="text-sm font-bold text-purple-900">{selectedScenario.title}</p>
+                      <p className="text-xs text-purple-700">{selectedScenario.description}</p>
+                    </div>
+                    <button
+                      onClick={() => setShowScenarioSelector(true)}
+                      className="text-xs text-purple-600 hover:text-purple-800 underline"
+                    >
+                      更換
+                    </button>
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-xs font-medium text-purple-900">您的角色：</span>
+                    <span className="text-xs bg-purple-200 text-purple-900 px-2 py-1 rounded">
+                      {selectedScenario.roles.find(r => r.id === selectedRole)?.name}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Start Button */}
+          <button
+            onClick={handleStartConversation}
+            disabled={micPermission !== 'granted'}
+            className={`w-full rounded-2xl py-4 text-lg font-semibold shadow-lg transition-all ${
+              micPermission === 'granted'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 hover:shadow-xl'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <MessageSquare className="h-6 w-6" />
+              <span>開始對話</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Interviewer Selector Modal */}
+      {showInterviewerSelector && (
+        <InterviewerSelector
+          currentInterviewer={currentInterviewer}
+          onSelect={(id) => {
+            setCurrentInterviewer(id)
+            localStorage.setItem('selectedInterviewer', id)
+            setShowInterviewerSelector(false)
+          }}
+          onClose={() => setShowInterviewerSelector(false)}
+        />
+      )}
+
+      {/* Scenario Selector Modal */}
+      {showScenarioSelector && (
+        <ScenarioSelector
+          onSelect={handleScenarioSelect}
+          onClose={() => setShowScenarioSelector(false)}
+        />
+      )}
+
+      {/* Role Selector Modal */}
+      {showRoleSelector && selectedScenario && (
+        <RoleSelector
+          scenario={selectedScenario}
+          onSelect={handleRoleSelect}
+          onBack={() => {
+            setShowRoleSelector(false)
+            setShowScenarioSelector(true)
+          }}
+        />
+      )}
+    </div>
+  )
+}

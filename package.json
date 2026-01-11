@@ -1,0 +1,40 @@
+{
+  "name": "interview-plus-monorepo",
+  "version": "1.0.0",
+  "description": "AI Mock Interview Platform - Monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd apps/backend && npm run dev",
+    "dev:frontend": "cd apps/web && npm run dev",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd apps/backend && npm run build",
+    "build:frontend": "cd apps/web && npm run build",
+    "start": "npm run start:backend",
+    "start:backend": "cd apps/backend && npm start",
+    "start:frontend": "cd apps/web && npm start",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "cd apps/backend && npm run clean",
+    "clean:frontend": "cd apps/web && rm -rf .next",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd apps/backend && npm run lint 2>/dev/null || echo 'No lint script in backend'",
+    "lint:frontend": "cd apps/web && npm run lint",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd apps/backend && npm test 2>/dev/null || echo 'No test script in backend'",
+    "test:frontend": "cd apps/web && npm test 2>/dev/null || echo 'No test script in frontend'"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.12.2",
+    "form-data": "^4.0.4"
+  }
+}

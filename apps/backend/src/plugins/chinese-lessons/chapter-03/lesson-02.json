@@ -1,0 +1,123 @@
+{
+  "lesson_id": "C3-L2",
+  "chapter_id": "C3",
+  "lesson_number": 2,
+  "title": "Verb 有 (to have)",
+  "description": "Learn how to use 有 to talk about having things.",
+  "steps": [
+    {
+      "id": 1,
+      "teacher": "I have a phone.",
+      "expected_answer": [
+        "I have a phone."
+      ],
+      "chinese_hint": "我有一支手機。",
+      "encouragement": "Great! You used 有 correctly!",
+      "tts_text": "I have a phone.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 2,
+      "teacher": "I don't have any money.",
+      "expected_answer": [
+        "I don't have any money."
+      ],
+      "chinese_hint": "我沒錢啦。\n\nor\n\n我身上沒錢。",
+      "encouragement": "Nice use of 沒有!",
+      "tts_text": "I don't have any money.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 3,
+      "teacher": "Do you have any siblings?",
+      "expected_answer": [
+        "Do you have any siblings?"
+      ],
+      "chinese_hint": "你有兄弟姐妹嗎？",
+      "encouragement": "Good question!",
+      "tts_text": "Do you have any siblings?",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 4,
+      "teacher": "He has a dog.",
+      "expected_answer": [
+        "He has a dog."
+      ],
+      "chinese_hint": "他養了一隻狗。",
+      "encouragement": "Excellent sentence!",
+      "tts_text": "He has a dog.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 5,
+      "teacher": "We have a lot of homework.",
+      "expected_answer": [
+        "We have a lot of homework."
+      ],
+      "chinese_hint": "我們有好多作業要做。",
+      "encouragement": "Great work!",
+      "tts_text": "We have a lot of homework.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 6,
+      "teacher": "This room has a table.",
+      "expected_answer": [
+        "This room has a table in it."
+      ],
+      "chinese_hint": "這間房間裡有一張桌子。",
+      "encouragement": "Nice! Very useful pattern!",
+      "tts_text": "This room has a table.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 7,
+      "teacher": "There are a lot of chairs in the classroom.",
+      "expected_answer": [
+        "There are a lot of chairs in the classroom."
+      ],
+      "chinese_hint": "教室裡有很多椅子。",
+      "encouragement": "Well done!",
+      "tts_text": "There are a lot of chairs in the classroom.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 8,
+      "teacher": "Do you have any questions?",
+      "expected_answer": [
+        "Do you have a question?"
+      ],
+      "chinese_hint": "你有什麼問題嗎？",
+      "encouragement": "Great question sentence!",
+      "tts_text": "Do you have any questions?",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 9,
+      "teacher": "I don't have time.",
+      "expected_answer": [
+        "I don't have time."
+      ],
+      "chinese_hint": "我沒空。",
+      "encouragement": "Perfect use of 沒有!",
+      "tts_text": "I don't have time.",
+      "tts_voice": "en-US-JennyNeural"
+    },
+    {
+      "id": 10,
+      "teacher": "Do they have a car?",
+      "expected_answer": [
+        "Do they have a car?"
+      ],
+      "chinese_hint": "他們有車嗎？",
+      "encouragement": "Awesome! Keep it up!",
+      "tts_text": "Do they have a car?",
+      "tts_voice": "en-US-JennyNeural"
+    }
+  ],
+  "review": {
+    "summary": "You learned how to use 有 and 沒有 to talk about possession.",
+    "mission": "Next lesson: Learn how to use 在 to talk about location."
+  }
+}

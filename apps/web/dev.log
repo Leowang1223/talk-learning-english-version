@@ -1,0 +1,151 @@
+   ▲ Next.js 14.0.0
+   - Local:        http://localhost:3000
+
+ ✓ Ready in 2.3s
+ ○ Compiling /mock-interview/page ...
+ ✓ Compiled /mock-interview/page in 2.5s (577 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 254ms (558 modules)
+ ✓ Compiled in 161ms (558 modules)
+ ✓ Compiled in 179ms (558 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 194ms (558 modules)
+ ✓ Compiled in 78ms (558 modules)
+ ✓ Compiled in 140ms (558 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled /not-found in 235ms (563 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 387ms (558 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 1301ms (558 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 366ms (558 modules)
+ ✓ Compiled in 162ms (558 modules)
+ ✓ Compiled /not-found in 177ms (563 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 224ms (558 modules)
+ ✓ Compiled in 142ms (558 modules)
+ ✓ Compiled in 508ms (558 modules)
+ ✓ Compiled in 148ms (558 modules)
+ ✓ Compiled in 154ms (558 modules)
+ ✓ Compiled in 103ms (558 modules)
+ ✓ Compiled /not-found in 152ms (563 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled /page in 319ms (574 modules)
+ ✓ Compiled /recording-test/page in 242ms (580 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 378ms (565 modules)
+ ✓ Compiled in 581ms (565 modules)
+ ✓ Compiled in 527ms (565 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 420ms (565 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 382ms (565 modules)
+ ✓ Compiled /not-found in 202ms (570 modules)
+ ✓ Compiled in 361ms (584 modules)
+ ✓ Compiled in 1208ms (584 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 418ms (579 modules)
+ ✓ Compiled in 261ms (579 modules)
+ ✓ Compiled in 359ms (579 modules)
+ ✓ Compiled in 321ms (579 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 271ms (565 modules)
+ ✓ Compiled in 203ms (565 modules)
+ ✓ Compiled /not-found in 166ms (570 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ⨯ ./src/lib/ttsPlayer.ts
+Error: 
+  [31mx[0m Expression expected
+     ,-[[36;1;4m/Users/yung/Documents/工作/SIDE_PROJECT/AI Interview/ai-mock-interview/apps/web/src/lib/ttsPlayer.ts[0m:243:1]
+ [2m243[0m |    * 確保 AudioContext 處於運行狀態
+ [2m244[0m |    * 內部方法，處理音訊上下文暫停的情況
+ [2m245[0m |    */
+ [2m246[0m |   private async ensureResumed(): Promise<void> {
+     : [31;1m  ^^^^^^^[0m
+ [2m247[0m |     const ctx = getAudioContext();
+ [2m248[0m |     if (ctx.state !== 'running') {
+ [2m249[0m |       try { await ctx.resume(); } catch {}
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/lib/ttsPlayer.ts
+./src/app/mock-interview/page.tsx
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ⨯ ./src/lib/ttsPlayer.ts
+Error: 
+  [31mx[0m Expression expected
+     ,-[[36;1;4m/Users/yung/Documents/工作/SIDE_PROJECT/AI Interview/ai-mock-interview/apps/web/src/lib/ttsPlayer.ts[0m:243:1]
+ [2m243[0m |    * 確保 AudioContext 處於運行狀態
+ [2m244[0m |    * 內部方法，處理音訊上下文暫停的情況
+ [2m245[0m |    */
+ [2m246[0m |   private async ensureResumed(): Promise<void> {
+     : [31;1m  ^^^^^^^[0m
+ [2m247[0m |     const ctx = getAudioContext();
+ [2m248[0m |     if (ctx.state !== 'running') {
+ [2m249[0m |       try { await ctx.resume(); } catch {}
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/lib/ttsPlayer.ts
+./src/app/mock-interview/page.tsx
+ ✓ Compiled in 364ms (565 modules)
+ ✓ Compiled in 207ms (565 modules)
+ ✓ Compiled /not-found in 283ms (570 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 577ms (565 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled /not-found in 309ms (570 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 1447ms (570 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 276ms (570 modules)
+ ✓ Compiled in 1285ms (570 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 192ms (570 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 5.4s (579 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 1126ms (579 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled /not-found in 400ms (570 modules)
+ ⨯ The requested resource isn't a valid image for /interviewers/woman.png received text/html; charset=utf-8
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 565ms (579 modules)
+ ✓ Compiled in 267ms (579 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled in 346ms (579 modules)
+ ✓ Compiled in 317ms (579 modules)
+ ✓ Compiled in 230ms (579 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+ ✓ Compiled /not-found in 278ms (570 modules)
+ ✓ Compiled in 298ms (584 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: Unable to snapshot resolve dependencies

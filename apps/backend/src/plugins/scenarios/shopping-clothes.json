@@ -1,0 +1,193 @@
+{
+  "scenario_id": "shopping-clothes-01",
+  "title": "Shopping for Clothes",
+  "chineseTitle": "買衣服",
+  "description": "Practice shopping for clothes and asking about sizes, colors, and prices",
+  "chineseDescription": "練習買衣服，詢問尺寸、顏色和價格",
+  "difficulty": "A0-A1",
+  "category": "Shopping",
+  "objective": "Successfully find and buy clothing items",
+  "chineseObjective": "成功找到並購買衣物",
+  "estimatedTurns": 10,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "customer",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Greet the shop assistant",
+      "chineseDescription": "向店員打招呼",
+      "keywords": [
+        "hello",
+        "hello",
+        "excuse me",
+        "excuse me"
+      ],
+      "weight": 10
+    },
+    {
+      "id": 2,
+      "description": "Ask about clothing items",
+      "chineseDescription": "詢問衣物",
+      "keywords": [
+        "Do you have",
+        "Want to buy",
+        "Take a look",
+        "Clothes",
+        "Pants",
+        "Shoes",
+        "Looking for",
+        "I want",
+        "Looking for"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Ask about size",
+      "chineseDescription": "詢問尺寸",
+      "keywords": [
+        "size",
+        "size",
+        "large",
+        "small",
+        "medium",
+        "size",
+        "large",
+        "medium",
+        "small",
+        "S",
+        "M",
+        "L"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 4,
+      "description": "Ask about color or try on",
+      "chineseDescription": "詢問顏色或試穿",
+      "keywords": [
+        "color",
+        "try on",
+        "can/may I",
+        "red",
+        "blue",
+        "black",
+        "white",
+        "try",
+        "try it on",
+        "try it"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 5,
+      "description": "Ask about price and complete purchase",
+      "chineseDescription": "詢問價格並完成購買",
+      "keywords": [
+        "How much is it?",
+        "Price",
+        "Buy",
+        "Pay",
+        "Cheap",
+        "Expensive",
+        "How many?",
+        "Credit card",
+        "Cash"
+      ],
+      "weight": 25
+    }
+  ],
+  "roles": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "chineseName": "顧客",
+      "systemPrompt": "You are a customer shopping for clothes . You want to find the right size and color. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences). Ask about sizes, colors, and prices."
+    },
+    {
+      "id": "shop-assistant",
+      "name": "Shop Assistant",
+      "chineseName": "店員",
+      "interviewerImage": "clothes waitress.jpg",
+      "interviewerId": "cendy",
+      "systemPrompt": "You are a helpful shop assistant in a clothing store . Help customers find what they need, suggest sizes and colors. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses concise (1-2 sentences). Be friendly and helpful."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "customer": [
+        {
+          "chinese": "你好，我想買一件衣服。",
+          "english": "Hello, I want to buy some clothes.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "有沒有中號的？",
+          "english": "Do you have medium size?",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "我可以試穿嗎？",
+          "english": "Can I try it on?",
+          "type": "safe",
+          "checkpointId": 4
+        },
+        {
+          "chinese": "這個多少錢？",
+          "english": "How much is this?",
+          "type": "safe",
+          "checkpointId": 5
+        }
+      ],
+      "shop-assistant": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "clothes",
+      "chinese": "衣服"
+    },
+    {
+      "english": "size",
+      "chinese": "尺寸"
+    },
+    {
+      "english": "try on",
+      "chinese": "試穿"
+    },
+    {
+      "english": "color",
+      "chinese": "顏色"
+    },
+    {
+      "english": "how much",
+      "chinese": "多少錢"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "Do you have...?",
+      "chinese": "有沒有...?",
+      "example": "有沒有中號的?"
+    },
+    {
+      "pattern": "Can I...?",
+      "chinese": "我可以...嗎?",
+      "example": "我可以試穿嗎?"
+    },
+    {
+      "pattern": "This...",
+      "chinese": "這個...",
+      "example": "這個多少錢?"
+    }
+  ],
+  "tags": [
+    "shopping",
+    "clothes",
+    "daily-life"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

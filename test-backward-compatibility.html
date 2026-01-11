@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>測試向後兼容性</title>
+</head>
+<body>
+    <h1>向後兼容性測試</h1>
+    <button onclick="addOldFormatRecord()">添加舊格式記錄</button>
+    <button onclick="checkHistory()">檢查歷史記錄</button>
+    <button onclick="clearHistory()">清除歷史記錄</button>
+    <div id="output"></div>
+
+    <script>
+        function addOldFormatRecord() {
+            // 創建一個舊格式的記錄（沒有 detailedScores, feedback, transcript）
+            const oldRecord = {
+                sessionId: `lesson-L1-${Date.now()}`,
+                lessonId: "L1",
+                lessonTitle: "基本問候語",
+                completedAt: new Date().toISOString(),
+                totalScore: 82,
+                questionsCount: 3,
+                totalAttempts: 4,
+                radar: {
+                    pronunciation: 80,
+                    fluency: 85,
+                    accuracy: 78,
+                    comprehension: 85,
+                    confidence: 82
+                },
+                results: [
+                    {
+                        stepId: 1,
+                        question: "你好，請問你的名字是什麼？ (Hello, what's your name?)",
+                        score: 85,
+                        attempts: 1,
+                        passed: true
+                        // 注意：沒有 detailedScores, feedback, transcript
+                    },
+                    {
+                        stepId: 2,
+                        question: "很高興認識你 (Nice to meet you)",
+                        score: 78,
+                        attempts: 2,
+                        passed: true
+                        // 注意：沒有 detailedScores, feedback, transcript
+                    },
+                    {
+                        stepId: 3,
+                        question: "再見 (Goodbye)",
+                        score: 83,
+                        attempts: 1,
+                        passed: true
+                        // 注意：沒有 detailedScores, feedback, transcript
+                    }
+                ]
+            };
+
+            // 獲取現有歷史記錄
+            const existingHistory = JSON.parse(localStorage.getItem('lessonHistory') || '[]');
+            
+            // 添加舊格式記錄
+            existingHistory.push(oldRecord);
+            
+            // 保存回 localStorage
+            localStorage.setItem('lessonHistory', JSON.stringify(existingHistory));
+            
+            document.getElementById('output').innerHTML = '<p style="color: green;">已添加舊格式記錄！</p>';
+        }
+
+        function checkHistory() {
+            const history = JSON.parse(localStorage.getItem('lessonHistory') || '[]');
+            document.getElementById('output').innerHTML = '<pre>' + JSON.stringify(history, null, 2) + '</pre>';
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('lessonHistory');
+            document.getElementById('output').innerHTML = '<p style="color: red;">已清除所有歷史記錄！</p>';
+        }
+    </script>
+</body>
+</html>

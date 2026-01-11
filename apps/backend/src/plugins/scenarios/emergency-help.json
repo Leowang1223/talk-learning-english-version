@@ -1,0 +1,220 @@
+{
+  "scenario_id": "emergency-help-01",
+  "title": "Emergency Assistance",
+  "chineseTitle": "緊急求助",
+  "description": "Practice asking for emergency help in Chinese",
+  "chineseDescription": "練習中文緊急求助對話",
+  "difficulty": "A2-B1",
+  "category": "Emergency",
+  "objective": "Successfully communicate an emergency situation and get help",
+  "chineseObjective": "成功說明緊急情況並獲得幫助",
+  "estimatedTurns": 10,
+  "firstSpeaker": "user",
+  "defaultUserRole": "caller",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "State emergency clearly",
+      "chineseDescription": "說明緊急情況",
+      "keywords": [
+        "Help!",
+        "help",
+        "emergency",
+        "urgent",
+        "I need help",
+        "something happened",
+        "come quick",
+        "hurry"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 2,
+      "description": "Provide location",
+      "chineseDescription": "提供位置",
+      "keywords": [
+        "at",
+        "address",
+        "location",
+        "here",
+        "nearby",
+        "street",
+        "road",
+        "I am at",
+        "position"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Describe the problem",
+      "chineseDescription": "描述問題",
+      "keywords": [
+        "injured",
+        "injured",
+        "sick",
+        "sick",
+        "accident",
+        "accident",
+        "fire",
+        "theft",
+        "bleeding",
+        "fainted",
+        "unconscious"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 4,
+      "description": "Answer questions from responder",
+      "chineseDescription": "回答詢問",
+      "keywords": [
+        "yes",
+        "yes",
+        "no",
+        "no",
+        "I don't know",
+        "yes",
+        "how many",
+        "is",
+        "correct",
+        "uh-huh"
+      ],
+      "weight": 15
+    },
+    {
+      "id": 5,
+      "description": "Confirm help is coming",
+      "chineseDescription": "確認救援",
+      "keywords": [
+        "how long",
+        "how long",
+        "when",
+        "come",
+        "arrive",
+        "how many minutes",
+        "almost there"
+      ],
+      "weight": 10
+    },
+    {
+      "id": 6,
+      "description": "Thank responder",
+      "chineseDescription": "感謝",
+      "keywords": [
+        "thank you",
+        "thanks",
+        "okay",
+        "got it",
+        "I understand"
+      ],
+      "weight": 5
+    }
+  ],
+  "roles": [
+    {
+      "id": "caller",
+      "name": "Emergency Caller",
+      "chineseName": "求助者",
+      "systemPrompt": "You are calling for emergency help . Clearly state what happened and where you are. Describe the problem urgently but clearly. Answer questions from the responder. Stay calm. IMPORTANT: Use natural, conversational English naturally with American English. Keep responses clear (1-2 sentences)."
+    },
+    {
+      "id": "responder",
+      "name": "Emergency Responder",
+      "chineseName": "急救人員",
+      "interviewerImage": "emergency  helper.png",
+      "interviewerId": "john",
+      "systemPrompt": "You are an emergency responder (119 operator) . Stay calm and professional. Ask for the location first, then details about the emergency. Reassure the caller that help is on the way. IMPORTANT: Use natural, conversational English naturally with American English. Keep instructions clear and concise (1-2 sentences)."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "caller": [
+        {
+          "chinese": "救命！我需要幫助！",
+          "english": "Help! I need assistance!",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "我在主街1號，靠近地鐵站。",
+          "english": "I'm at 1 Main Street, near the subway station.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "有人受傷了！",
+          "english": "Someone is injured!",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "他在流血，呼吸困難。",
+          "english": "He's bleeding and having difficulty breathing.",
+          "type": "advanced",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "救護車多久會到？",
+          "english": "How long until the ambulance arrives?",
+          "type": "safe",
+          "checkpointId": 5
+        },
+        {
+          "chinese": "謝謝！我會等著。",
+          "english": "Thank you! I'll wait.",
+          "type": "safe",
+          "checkpointId": 6
+        }
+      ],
+      "responder": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "help/save me",
+      "chinese": "救命"
+    },
+    {
+      "english": "emergency",
+      "chinese": "緊急"
+    },
+    {
+      "english": "injured",
+      "chinese": "受傷"
+    },
+    {
+      "english": "ambulance",
+      "chinese": "救護車"
+    },
+    {
+      "english": "address",
+      "chinese": "地址"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I need...",
+      "chinese": "我需要...",
+      "example": "我需要幫助"
+    },
+    {
+      "pattern": "Someone...",
+      "chinese": "有人...",
+      "example": "有人受傷了"
+    },
+    {
+      "pattern": "How long...?",
+      "chinese": "多久...？",
+      "example": "救護車多久會到？"
+    }
+  ],
+  "tags": [
+    "emergency",
+    "health",
+    "safety",
+    "urgent"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

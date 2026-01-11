@@ -1,0 +1,192 @@
+{
+  "scenario_id": "hotel-checkin-01",
+  "title": "Hotel Check-in",
+  "chineseTitle": "飯店入住",
+  "description": "Practice checking into a hotel",
+  "chineseDescription": "飯店入住對話",
+  "difficulty": "A0-A1",
+  "category": "Travel",
+  "objective": "Successfully complete hotel check-in process",
+  "chineseObjective": "成功完成飯店入住流程",
+  "estimatedTurns": 10,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "guest",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Provide reservation name and details",
+      "chineseDescription": "提供預訂姓名和資料",
+      "keywords": [
+        "I",
+        "book",
+        "room reservation",
+        "name",
+        "last name",
+        "check in",
+        "check in",
+        "booking",
+        "hello",
+        "hello",
+        "check in"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 2,
+      "description": "Show ID and answer staff questions",
+      "chineseDescription": "出示證件並回答問題",
+      "keywords": [
+        "passport",
+        "identification card",
+        "ID",
+        "document",
+        "this is",
+        "for you",
+        "have",
+        "don't have",
+        "yes",
+        "correct"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 3,
+      "description": "Acknowledge room information and ask questions if needed",
+      "chineseDescription": "確認房間資訊並提問（如需要）",
+      "keywords": [
+        "okay",
+        "got it",
+        "I understand",
+        "I know",
+        "clear",
+        "thanks",
+        "excuse me",
+        "do you have",
+        "wifi",
+        "breakfast",
+        "what time",
+        "password",
+        "which floor"
+      ],
+      "weight": 30
+    },
+    {
+      "id": 4,
+      "description": "Thank the staff",
+      "chineseDescription": "感謝櫃檯人員",
+      "keywords": [
+        "thank you",
+        "grateful",
+        "sorry for the trouble",
+        "thank you for your hard work"
+      ],
+      "weight": 20
+    }
+  ],
+  "roles": [
+    {
+      "id": "guest",
+      "name": "Hotel Guest",
+      "chineseName": "客人",
+      "systemPrompt": "You are a hotel guest checking into a US hotel (飯店). Be polite and professional. Ask about your room and hotel facilities. IMPORTANT: Use natural, conversational English naturally with American English (e.g., 飯店 not 酒店). Keep responses concise (1-2 sentences)."
+    },
+    {
+      "id": "receptionist",
+      "name": "Hotel Receptionist",
+      "chineseName": "前台",
+      "interviewerImage": "man.png",
+      "interviewerId": "man",
+      "systemPrompt": "You are a hotel receptionist at a US hotel (飯店). Be welcoming and helpful. Confirm the guest's reservation, provide room information, and answer questions about hotel facilities. IMPORTANT: Use natural, conversational English naturally with American English (e.g., 飯店 not 酒店). Keep responses clear and professional (1-2 sentences)."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "guest": [
+        {
+          "chinese": "您好，我來check in。我預訂了一個房間。",
+          "english": "Hello, I'm here to check in. I have a reservation.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "我的名字是李明，我昨天訂的房間。",
+          "english": "My name is Li Ming, I made a reservation yesterday.",
+          "type": "advanced",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "這是我的護照。",
+          "english": "Here is my passport.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "好的，我明白了。請問早餐幾點開始？",
+          "english": "Okay, I understand. What time does breakfast start?",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "了解，謝謝。請問wifi密碼是什麼？",
+          "english": "I see, thank you. What is the wifi password?",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "謝謝你的幫助。",
+          "english": "Thank you for your help.",
+          "type": "safe",
+          "checkpointId": 4
+        }
+      ],
+      "receptionist": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "check in",
+      "chinese": "入住"
+    },
+    {
+      "english": "reservation",
+      "chinese": "預訂"
+    },
+    {
+      "english": "room",
+      "chinese": "房間"
+    },
+    {
+      "english": "key",
+      "chinese": "鑰匙"
+    },
+    {
+      "english": "breakfast",
+      "chinese": "早餐"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I'm here to...",
+      "chinese": "我來...",
+      "example": "我來check in"
+    },
+    {
+      "pattern": "May I ask...",
+      "chinese": "請問...",
+      "example": "請問早餐幾點開始？"
+    },
+    {
+      "pattern": "On which floor?",
+      "chinese": "在幾樓？",
+      "example": "房間在幾樓？"
+    }
+  ],
+  "tags": [
+    "hotel",
+    "travel",
+    "accommodation",
+    "daily-life"
+  ],
+  "createdAt": "2025-01-01T00:00:00Z",
+  "isCustom": false
+}

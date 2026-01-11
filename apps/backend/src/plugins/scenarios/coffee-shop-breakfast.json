@@ -1,0 +1,212 @@
+{
+  "scenario_id": "coffee-shop-breakfast-01",
+  "title": "Ordering Breakfast at a Coffee Shop",
+  "chineseTitle": "咖啡店點早餐",
+  "description": "Practice ordering breakfast and coffee at an American coffee shop",
+  "chineseDescription": "在美式咖啡店點早餐和咖啡",
+  "difficulty": "A0-A1",
+  "category": "Daily Life",
+  "objective": "Successfully order breakfast and drinks",
+  "chineseObjective": "成功點早餐和飲料",
+  "estimatedTurns": 8,
+  "firstSpeaker": "ai",
+  "defaultUserRole": "customer",
+  "checkpoints": [
+    {
+      "id": 1,
+      "description": "Greet and order main item",
+      "chineseDescription": "打招呼並點主食",
+      "keywords": [
+        "hi",
+        "hello",
+        "I want",
+        "I'll have",
+        "can I get",
+        "breakfast sandwich",
+        "bagel",
+        "muffin",
+        "croissant",
+        "donut",
+        "pancakes"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 2,
+      "description": "Choose options or customize",
+      "chineseDescription": "選擇配料或客製化",
+      "keywords": [
+        "bacon",
+        "egg",
+        "cheese",
+        "ham",
+        "sausage",
+        "cream cheese",
+        "butter",
+        "toasted",
+        "warmed"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 3,
+      "description": "Order drinks",
+      "chineseDescription": "點飲料",
+      "keywords": [
+        "coffee",
+        "latte",
+        "cappuccino",
+        "espresso",
+        "americano",
+        "mocha",
+        "tea",
+        "orange juice",
+        "hot",
+        "iced",
+        "small",
+        "medium",
+        "large",
+        "milk",
+        "sugar",
+        "cream"
+      ],
+      "weight": 25
+    },
+    {
+      "id": 4,
+      "description": "Ask about price and pay",
+      "chineseDescription": "詢問價錢並付款",
+      "keywords": [
+        "How much",
+        "total",
+        "cash",
+        "card",
+        "credit",
+        "debit",
+        "pay"
+      ],
+      "weight": 20
+    },
+    {
+      "id": 5,
+      "description": "Thank and conclude",
+      "chineseDescription": "感謝結束",
+      "keywords": [
+        "thank you",
+        "thanks",
+        "have a nice day"
+      ],
+      "weight": 10
+    }
+  ],
+  "roles": [
+    {
+      "id": "customer",
+      "name": "Customer",
+      "chineseName": "顧客",
+      "systemPrompt": "You are a customer ordering breakfast at an American coffee shop. Order food and drinks. IMPORTANT: Use natural, conversational American English. Keep responses concise (1-2 sentences). Be friendly and casual."
+    },
+    {
+      "id": "barista",
+      "name": "Barista",
+      "chineseName": "咖啡師",
+      "interviewerImage": "breakfast waitress.png",
+      "interviewerId": "cendy",
+      "systemPrompt": "You are a barista at an American coffee shop. Take orders warmly, ask about preferences (size, milk type, toppings), and help customers. IMPORTANT: Use natural, conversational American English with casual expressions. Keep responses concise (1-2 sentences). Be friendly and professional."
+    }
+  ],
+  "suggestions": {
+    "byRole": {
+      "customer": [
+        {
+          "chinese": "你好，我要一個培根蛋三明治。",
+          "english": "Hi, I'll have a bacon egg sandwich.",
+          "type": "safe",
+          "checkpointId": 1
+        },
+        {
+          "chinese": "加起司，謝謝。",
+          "english": "With cheese, please.",
+          "type": "safe",
+          "checkpointId": 2
+        },
+        {
+          "chinese": "再來一杯中杯拿鐵，熱的。",
+          "english": "And a medium hot latte.",
+          "type": "safe",
+          "checkpointId": 3
+        },
+        {
+          "chinese": "總共多少錢？",
+          "english": "How much is that?",
+          "type": "safe",
+          "checkpointId": 4
+        },
+        {
+          "chinese": "謝謝！",
+          "english": "Thank you!",
+          "type": "safe",
+          "checkpointId": 5
+        }
+      ],
+      "barista": []
+    }
+  },
+  "keyVocabulary": [
+    {
+      "english": "breakfast sandwich",
+      "chinese": "早餐三明治"
+    },
+    {
+      "english": "bagel",
+      "chinese": "貝果"
+    },
+    {
+      "english": "latte",
+      "chinese": "拿鐵"
+    },
+    {
+      "english": "cappuccino",
+      "chinese": "卡布奇諾"
+    },
+    {
+      "english": "barista",
+      "chinese": "咖啡師"
+    },
+    {
+      "english": "cream cheese",
+      "chinese": "奶油乳酪"
+    }
+  ],
+  "keyPatterns": [
+    {
+      "pattern": "I'll have...",
+      "chinese": "我要...",
+      "example": "I'll have a bagel"
+    },
+    {
+      "pattern": "With...",
+      "chinese": "加...",
+      "example": "With cream cheese"
+    },
+    {
+      "pattern": "Can I get...?",
+      "chinese": "可以給我...?",
+      "example": "Can I get a medium coffee?"
+    },
+    {
+      "pattern": "How much is...?",
+      "chinese": "...多少錢?",
+      "example": "How much is that?"
+    }
+  ],
+  "tags": [
+    "breakfast",
+    "coffee-shop",
+    "american-food",
+    "daily-life",
+    "A0-A1"
+  ],
+  "createdAt": "2025-01-11T00:00:00Z",
+  "isCustom": false
+}

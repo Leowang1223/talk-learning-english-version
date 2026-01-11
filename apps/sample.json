@@ -1,0 +1,27 @@
+{
+  "session_id": "test-session-001",
+  "date": "2024-01-15",
+  "items": [
+    {
+      "index": 0,
+      "question": "請簡單介紹你自己",
+      "answer": "我叫王小明，目前就讀於資工系。我特別對系統設計和人工智慧有興趣，高中時就自學 Python 並參加過全國比賽。",
+      "thinkingTime": 3,
+      "answeringTime": 40
+    },
+    {
+      "index": 1,
+      "question": "你在過去學習歷程中，最具代表性的成果是什麼？",
+      "answer": "我和同學合作完成一個專題，負責後端系統設計，最終獲得校內創新獎。這個經驗讓我學會團隊協作與解決實務問題。",
+      "thinkingTime": 5,
+      "answeringTime": 55
+    },
+    {
+      "index": 2,
+      "question": "你對未來五年或十年的規劃是什麼？",
+      "answer": "我希望先在研究所繼續學習人工智慧，之後進入科技公司累積實務經驗，長期目標是成為系統架構師。",
+      "thinkingTime": 2,
+      "answeringTime": 35
+    }
+  ]
+}

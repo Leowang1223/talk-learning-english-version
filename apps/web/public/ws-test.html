@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket 連接測試</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+        .connecting { background-color: #fff3cd; color: #856404; }
+        button { padding: 8px 16px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .connect { background-color: #007bff; color: white; }
+        .disconnect { background-color: #dc3545; color: white; }
+        .test { background-color: #28a745; color: white; }
+        .messages { max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+        .message { margin: 5px 0; padding: 5px; background-color: #f8f9fa; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket 連接測試</h1>
+    
+    <div id="status" class="status disconnected">未連接</div>
+    
+    <div>
+        <button id="connectBtn" class="connect" onclick="connect()">連接</button>
+        <button id="disconnectBtn" class="disconnect" onclick="disconnect()" disabled>斷開</button>
+        <button id="testBtn" class="test" onclick="sendTest()" disabled>發送測試消息</button>
+        <button id="interviewBtn" class="test" onclick="startInterview()" disabled>啟動面試</button>
+    </div>
+    
+    <h3>消息記錄:</h3>
+    <div id="messages" class="messages"></div>
+
+    <script>
+        let ws = null;
+        let connected = false;
+
+        function updateStatus(text, className) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = `status ${className}`;
+        }
+
+        function updateButtons() {
+            document.getElementById('connectBtn').disabled = connected;
+            document.getElementById('disconnectBtn').disabled = !connected;
+            document.getElementById('testBtn').disabled = !connected;
+            document.getElementById('interviewBtn').disabled = !connected;
+        }
+
+        function addMessage(message, type = 'info') {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${message}`;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function connect() {
+            try {
+                updateStatus('連接中...', 'connecting');
+                addMessage('正在連接到 ws://localhost:8081/ws...');
+                
+                ws = new WebSocket('ws://localhost:8081/ws');
+                
+                ws.onopen = function() {
+                    connected = true;
+                    updateStatus('已連接', 'connected');
+                    updateButtons();
+                    addMessage('WebSocket 連接成功！', 'success');
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addMessage(`收到: ${data.type || 'unknown'} - ${JSON.stringify(data)}`, 'received');
+                    } catch (e) {
+                        addMessage(`收到二進制數據: ${event.data.byteLength} bytes`, 'received');
+                    }
+                };
+                
+                ws.onclose = function(event) {
+                    connected = false;
+                    updateStatus('連接已關閉', 'disconnected');
+                    updateButtons();
+                    addMessage(`連接關閉: ${event.code} - ${event.reason}`, 'error');
+                };
+                
+                ws.onerror = function(error) {
+                    addMessage(`連接錯誤: ${error}`, 'error');
+                };
+                
+            } catch (error) {
+                updateStatus('連接失敗', 'disconnected');
+                addMessage(`連接失敗: ${error}`, 'error');
+            }
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function sendTest() {
+            if (ws && connected) {
+                const message = {
+                    type: 'test',
+                    message: 'Hello from HTML test page!',
+                    timestamp: new Date().toISOString()
+                };
+                ws.send(JSON.stringify(message));
+                addMessage(`發送測試消息: ${JSON.stringify(message)}`, 'sent');
+            }
+        }
+
+        function startInterview() {
+            if (ws && connected) {
+                const message = {
+                    type: 'session.start',
+                    payload: {
+                        type: 'self_intro'
+                    }
+                };
+                ws.send(JSON.stringify(message));
+                addMessage(`啟動面試: ${JSON.stringify(message)}`, 'sent');
+            }
+        }
+
+        // 初始化
+        updateButtons();
+        addMessage('頁面已載入，點擊連接按鈕開始測試');
+    </script>
+</body>
+</html>

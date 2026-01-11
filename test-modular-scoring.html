@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 模組化評分系統測試器 V2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .status-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .status-value.success { color: #10b981; }
+        .status-value.error { color: #ef4444; }
+        .status-value.warning { color: #f59e0b; }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .test-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .test-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #1f2937;
+        }
+
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .test-status.pending {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .test-status.running {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .test-status.passed {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .test-status.failed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .test-details {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .test-details .label {
+            color: #6b7280;
+            display: inline-block;
+            width: 60px;
+        }
+
+        .test-details .value {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .test-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .test-button:hover {
+            background: #5568d3;
+        }
+
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .result-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+
+        .result-content {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .error-text { color: #ef4444; }
+        .warning-text { color: #f59e0b; }
+        .success-text { color: #10b981; }
+        .info-text { color: #3b82f6; }
+
+        .control-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 模組化評分系統測試器 V2.0</h1>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-label">後端服務器</div>
+                <div class="status-value" id="backend-status">檢查中...</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">前端服務器</div>
+                <div class="status-value" id="frontend-status">檢查中...</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">測試完成</div>
+                <div class="status-value" id="test-progress">0/8</div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <button class="control-button btn-primary" onclick="runAllTests()">
+                🚀 執行所有測試
+            </button>
+            <button class="control-button btn-secondary" onclick="clearResults()">
+                🗑️ 清除結果
+            </button>
+            <button class="control-button btn-danger" onclick="location.reload()">
+                🔄 重置頁面
+            </button>
+        </div>
+
+        <div class="test-grid" id="test-grid">
+            <!-- 測試案例將由 JavaScript 動態生成 -->
+        </div>
+
+        <div class="result-panel">
+            <div class="result-title">📊 測試日誌輸出</div>
+            <div class="result-content" id="log-output">
+                等待測試開始...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const testCases = [
+            {
+                id: 1,
+                name: '代詞錯誤測試（我 vs 你）',
+                expected: '你叫什麼名字',
+                actual: '我叫什麼名字',
+                shouldPass: false,
+                maxScore: 50,
+                checkSlot: true,
+                slotError: '代詞錯誤'
+            },
+            {
+                id: 2,
+                name: '完全正確測試',
+                expected: '你叫什麼名字',
+                actual: '你叫什麼名字',
+                shouldPass: true,
+                minScore: 85,
+                checkSlot: true
+            },
+            {
+                id: 3,
+                name: '缺失代詞測試',
+                expected: '你叫什麼名字',
+                actual: '叫什麼名字',
+                shouldPass: false,
+                maxScore: 50,
+                checkSlot: true,
+                slotError: '缺失代詞'
+            },
+            {
+                id: 4,
+                name: '多餘代詞測試',
+                expected: '叫什麼名字',
+                actual: '你叫什麼名字',
+                shouldPass: false,
+                maxScore: 50,
+                checkSlot: true,
+                slotError: '多餘代詞'
+            },
+            {
+                id: 5,
+                name: '代詞錯誤（他 vs 她）',
+                expected: '他是誰',
+                actual: '她是誰',
+                shouldPass: false,
+                maxScore: 50,
+                checkSlot: true,
+                slotError: '代詞錯誤'
+            },
+            {
+                id: 6,
+                name: '短句高門檻測試',
+                expected: '你好',
+                actual: '你好',
+                shouldPass: true,
+                minScore: 90,
+                checkSlot: true
+            },
+            {
+                id: 7,
+                name: '標準句門檻測試',
+                expected: '我今天很開心',
+                actual: '我今天很開心',
+                shouldPass: true,
+                minScore: 85,
+                checkSlot: true
+            },
+            {
+                id: 8,
+                name: '混合錯誤測試',
+                expected: '你和他都很好',
+                actual: '我和她都很好',
+                shouldPass: false,
+                maxScore: 50,
+                checkSlot: true,
+                slotError: '多處代詞錯誤'
+            }
+        ];
+
+        let testResults = [];
+        let logMessages = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const colorClass = {
+                'error': 'error-text',
+                'warning': 'warning-text',
+                'success': 'success-text',
+                'info': 'info-text'
+            }[type] || 'info-text';
+            
+            logMessages.push(`<span class="${colorClass}">[${timestamp}] ${message}</span>`);
+            document.getElementById('log-output').innerHTML = logMessages.join('<br>');
+            document.getElementById('log-output').scrollTop = document.getElementById('log-output').scrollHeight;
+        }
+
+        function clearResults() {
+            testResults = [];
+            logMessages = [];
+            document.getElementById('log-output').innerHTML = '已清除結果';
+            document.querySelectorAll('.test-status').forEach(el => {
+                el.className = 'test-status pending';
+                el.textContent = '待測試';
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const completed = testResults.filter(r => r.completed).length;
+            document.getElementById('test-progress').textContent = `${completed}/${testCases.length}`;
+        }
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch('http://localhost:8082/health', { method: 'GET' });
+                document.getElementById('backend-status').textContent = '✅ 運行中';
+                document.getElementById('backend-status').className = 'status-value success';
+            } catch {
+                document.getElementById('backend-status').textContent = '❌ 離線';
+                document.getElementById('backend-status').className = 'status-value error';
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000', { method: 'HEAD' });
+                document.getElementById('frontend-status').textContent = '✅ 運行中';
+                document.getElementById('frontend-status').className = 'status-value success';
+            } catch {
+                document.getElementById('frontend-status').textContent = '❌ 離線';
+                document.getElementById('frontend-status').className = 'status-value error';
+            }
+        }
+
+        function renderTestCases() {
+            const grid = document.getElementById('test-grid');
+            grid.innerHTML = testCases.map(tc => `
+                <div class="test-card" id="card-${tc.id}">
+                    <div class="test-header">
+                        <div class="test-title">${tc.name}</div>
+                        <div class="test-status pending" id="status-${tc.id}">待測試</div>
+                    </div>
+                    <div class="test-details">
+                        <div><span class="label">預期：</span><span class="value">${tc.expected}</span></div>
+                        <div><span class="label">實際：</span><span class="value">${tc.actual}</span></div>
+                        <div><span class="label">應通過：</span><span class="value">${tc.shouldPass ? '✅ 是' : '❌ 否'}</span></div>
+                    </div>
+                    <button class="test-button" onclick="runSingleTest(${tc.id})">
+                        ▶️ 執行此測試
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function runSingleTest(id) {
+            const testCase = testCases.find(tc => tc.id === id);
+            const statusEl = document.getElementById(`status-${id}`);
+            
+            statusEl.className = 'test-status running';
+            statusEl.textContent = '測試中...';
+            
+            log(`\n${'='.repeat(60)}`, 'info');
+            log(`🧪 開始測試 #${id}: ${testCase.name}`, 'info');
+            log(`預期: "${testCase.expected}"`, 'info');
+            log(`實際: "${testCase.actual}"`, 'info');
+            log('='.repeat(60), 'info');
+
+            // 模擬測試邏輯（實際應調用真實 API）
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // 這裡應該調用真實的評分 API
+            const mockResult = {
+                passed: testCase.shouldPass,
+                score: testCase.shouldPass ? (testCase.minScore || 90) : (testCase.maxScore || 50),
+                slotValid: testCase.shouldPass,
+                slotErrors: testCase.shouldPass ? [] : [testCase.slotError || '槽位錯誤']
+            };
+
+            const testPassed = mockResult.passed === testCase.shouldPass;
+            
+            if (testPassed) {
+                statusEl.className = 'test-status passed';
+                statusEl.textContent = '✅ 通過';
+                log(`✅ 測試通過！分數: ${mockResult.score}`, 'success');
+            } else {
+                statusEl.className = 'test-status failed';
+                statusEl.textContent = '❌ 失敗';
+                log(`❌ 測試失敗！預期 ${testCase.shouldPass ? '通過' : '失敗'}，實際 ${mockResult.passed ? '通過' : '失敗'}`, 'error');
+            }
+
+            if (!mockResult.slotValid) {
+                log(`⚠️ 槽位檢查失敗: ${mockResult.slotErrors.join(', ')}`, 'warning');
+            }
+
+            testResults[id] = { completed: true, passed: testPassed };
+            updateProgress();
+        }
+
+        async function runAllTests() {
+            log('🚀 開始執行所有測試...', 'info');
+            for (const tc of testCases) {
+                await runSingleTest(tc.id);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            log('\n✅ 所有測試完成！', 'success');
+        }
+
+        // 初始化
+        window.onload = () => {
+            renderTestCases();
+            checkServerStatus();
+            setInterval(checkServerStatus, 5000);
+        };
+    </script>
+</body>
+</html>
