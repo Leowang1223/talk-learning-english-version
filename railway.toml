@@ -1,12 +1,16 @@
+# ========================================
+# Railway Configuration for Backend Deployment
+# ========================================
+
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+dockerfilePath = "apps/backend/Dockerfile"
 
 [deploy]
-startCommand = "node apps/backend/dist/server.js"
+startCommand = "node dist/server.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+healthcheckPath = "/health"
+healthcheckTimeout = 10
 
-# Ensure Railway uses this configuration
-[env]
-# Railway should inject these from the dashboard
+# Railway will inject environment variables from dashboard
