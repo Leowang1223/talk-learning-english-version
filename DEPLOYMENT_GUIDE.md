@@ -18,6 +18,10 @@
 
 ### 1.1 執行 SQL Schema
 
+#### 選項 A：全新安裝（推薦）
+
+如果這是第一次設定，或者你遇到 `relation "profiles" already exists` 錯誤：
+
 1. 訪問 Supabase Dashboard：
    ```
    https://supabase.com/dashboard/project/tryfblgkwvtmyvkubqmm
@@ -27,9 +31,21 @@
 
 3. 點擊 **New query** 按鈕
 
-4. 複製整個 `supabase_tables.sql` 檔案內容並貼上
+4. 複製 **`supabase_tables_clean_install.sql`** 檔案的完整內容並貼上
 
 5. 點擊 **Run** 執行 SQL
+
+   ⚠️ **警告**：這會刪除現有的 profiles、lesson_history、conversation_sessions、flashcard_decks 和 flashcards 表格及其所有資料！
+
+#### 選項 B：檢查現有表格
+
+如果你想先檢查資料庫中已有什麼表格：
+
+1. 在 SQL Editor 中，複製 **`supabase_check_tables.sql`** 的內容並執行
+
+2. 查看結果：
+   - 如果看到所需的 5 個表格（profiles、lesson_history、conversation_sessions、flashcard_decks、flashcards）且結構正確，可以跳過 SQL 執行步驟
+   - 如果表格不完整或結構不對，使用「選項 A」重新創建
 
 ### 1.2 驗證表格建立
 
