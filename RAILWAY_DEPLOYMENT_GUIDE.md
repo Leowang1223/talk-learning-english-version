@@ -103,11 +103,113 @@ https://<你的railway域名>/health
 Error: Cannot find module '/app/apps/backend/dist/server.js'
 ```
 
-**解決方案：**
-這表示 TypeScript 沒有正確編譯。確保：
-1. `railway.toml` 使用正確的 `dockerfilePath = "apps/backend/Dockerfile"`
-2. Dockerfile 包含 `RUN npm run build` 步驟
-3. 重新部署專案
+**原因分析：**
+這個錯誤表示 TypeScript 代碼沒有被正確編譯成 JavaScript，或者 dist 目錄沒有被正確複製到生產環境。
+
+**詳細排查步驟：**
+
+#### 步驟 1：查看 Railway 構建日誌
+
+1. 前往 Railway 專案
+2. 點擊 **Deployments** 標籤
+3. 點擊最新的部署
+4. 查看 **Build Logs**（構建日誌）
+
+**在構建日誌中查找：**
+
+✅ **成功的標誌：**
+```
+=== Building TypeScript ===
+> @interview-plus/backend@1.0.0 build
+> tsc
+
+=== Build completed ===
+=== Checking dist directory ===
+total XXX
+-rw-r--r--  1 root root XXXXX server.js
+-rw-r--r--  1 root root XXXXX server.js.map
+```
+
+❌ **失敗的標誌：**
+- TypeScript 編譯錯誤
+- `npm ERR!` 錯誤訊息
+- `dist/` 目錄為空或不存在
+
+#### 步驟 2：檢查 Dockerfile 路徑
+
+1. 確認 Railway 使用正確的 Dockerfile
+2. 在 Railway 專案中，檢查 **Settings** → **Build** 設定
+3. 應該看到：`Dockerfile Path: apps/backend/Dockerfile`
+
+如果不正確，更新 `railway.toml` 文件並重新部署。
+
+#### 步驟 3：清除 Railway 緩存
+
+Railway 可能緩存了舊的構建：
+
+1. 前往 Railway 專案 **Settings**
+2. 向下滾動到 **Danger Zone**
+3. 點擊 **Clear Build Cache**
+4. 重新觸發部署
+
+#### 步驟 4：本地測試 Docker 構建
+
+在推送到 Railway 之前，可以在本地測試：
+
+```bash
+# 在專案根目錄執行
+docker build -f apps/backend/Dockerfile -t test-backend .
+
+# 如果構建成功，測試運行
+docker run --rm -p 8082:8082 \
+  -e PORT=8082 \
+  -e NODE_ENV=production \
+  -e SUPABASE_URL=https://tryfblgkwvtmyvkubqmm.supabase.co \
+  -e SUPABASE_SERVICE_ROLE_KEY=你的key \
+  -e GEMINI_API_KEY=你的key \
+  test-backend
+```
+
+**或使用提供的測試腳本：**
+```bash
+# Windows
+test-docker-build.bat
+```
+
+#### 步驟 5：檢查 TypeScript 配置
+
+確認 `apps/backend/tsconfig.json` 配置正確：
+
+```json
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    ...
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+#### 步驟 6：驗證依賴安裝
+
+確認 `apps/backend/package.json` 包含必要的依賴：
+
+```json
+{
+  "dependencies": {
+    "express": "^4.19.2",
+    "@supabase/supabase-js": "^2.89.0",
+    ...
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "@types/express": "^4.17.21",
+    ...
+  }
+}
+```
 
 ### 問題 2：健康檢查失敗
 
