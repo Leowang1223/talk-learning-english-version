@@ -86,10 +86,13 @@ WORKDIR /app
 # 複製 package files
 COPY --from=builder /workspace/apps/backend/package*.json ./
 
-# 安裝生產依賴（不包含 devDependencies）
-RUN echo "=== Installing production dependencies ===" && \
-    npm ci --only=production --legacy-peer-deps && \
-    echo "✓ Production dependencies installed"
+# 直接複製 node_modules（避免 npm ci lock file sync 問題）
+COPY --from=builder /workspace/apps/backend/node_modules ./node_modules
+
+# 移除 devDependencies 以減小鏡像大小
+RUN echo "=== Pruning devDependencies ===" && \
+    npm prune --production --legacy-peer-deps && \
+    echo "✓ Production dependencies ready"
 
 # 複製構建產物
 COPY --from=builder /workspace/apps/backend/dist ./dist
