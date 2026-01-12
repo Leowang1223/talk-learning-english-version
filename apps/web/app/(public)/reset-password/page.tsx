@@ -6,6 +6,9 @@ import { Mail, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import FancyButton from '@/components/ui/FancyButton'
 
+// Force dynamic rendering to avoid build-time prerender errors
+export const dynamic = 'force-dynamic'
+
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')

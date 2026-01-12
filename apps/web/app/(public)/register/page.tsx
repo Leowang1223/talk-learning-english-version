@@ -7,6 +7,9 @@ import { Mail, Lock, User, AlertCircle, Loader2 } from 'lucide-react'
 import FancyButton from '@/components/ui/FancyButton'
 import { createClient } from '@/lib/supabase/client'
 
+// Force dynamic rendering to avoid build-time prerender errors
+export const dynamic = 'force-dynamic'
+
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
