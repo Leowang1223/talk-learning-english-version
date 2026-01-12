@@ -912,8 +912,11 @@ export default function LessonPage() {
     // 🎤 獲取當前講師的語音配置
     const voiceConfig = getInterviewerVoice(currentInterviewer)
 
+    console.log(`🎤 [Lesson TTS] Interviewer: ${currentInterviewer}, Gender: ${voiceConfig.gender}, Config:`, voiceConfig)
+
     // 獲取語音引擎
     const voices = window.speechSynthesis.getVoices()
+    console.log(`📢 [Lesson TTS] Available voices (${voices.length}):`, voices.map(v => `${v.name} (${v.lang})`).slice(0, 10))
 
     // 選擇英文語音
     const englishVoice = voices.find(voice =>
@@ -926,44 +929,66 @@ export default function LessonPage() {
     // 🎤 選擇中文語音：優先使用講師的指定語音
     let chineseVoice: SpeechSynthesisVoice | undefined
 
-    // 1. 嘗試使用講師的首選語音名稱
+    // 1. 嘗試使用講師的首選語音名稱（精確匹配）
     if (voiceConfig.preferredVoiceName) {
       const preferredName = voiceConfig.preferredVoiceName
-      chineseVoice = voices.find(voice =>
-        voice.name === preferredName ||
-        voice.name.includes(preferredName)
-      )
+      chineseVoice = voices.find(voice => voice.name === preferredName)
+      if (chineseVoice) {
+        console.log(`✅ [Lesson TTS] Found preferred voice (exact): ${chineseVoice.name}`)
+      }
     }
 
-    // 2. 如果找不到首選語音，根據語言和性別選擇
-    if (!chineseVoice) {
+    // 2. 嘗試使用講師的首選語音名稱（部分匹配）
+    if (!chineseVoice && voiceConfig.preferredVoiceName) {
+      const preferredParts = voiceConfig.preferredVoiceName.toLowerCase().split(' ')
       chineseVoice = voices.find(voice => {
-        const langMatch = voice.lang.includes(voiceConfig.lang.split('-')[0])
-        const genderMatch = voiceConfig.gender === 'female'
-          ? (voice.name.includes('Female') || voice.name.includes('female') ||
-             voice.name.includes('女') || voice.name.includes('Chen') ||
-             voice.name.includes('Xiao') || voice.name.includes('Mei'))
-          : (voice.name.includes('Male') || voice.name.includes('male') ||
-             voice.name.includes('男') || voice.name.includes('Yun') ||
-             voice.name.includes('Chuan'))
-        return langMatch && genderMatch
+        const voiceNameLower = voice.name.toLowerCase()
+        return preferredParts.some(part => part.length > 3 && voiceNameLower.includes(part))
       })
+      if (chineseVoice) {
+        console.log(`✅ [Lesson TTS] Found preferred voice (partial): ${chineseVoice.name}`)
+      }
     }
 
-    // 3. 備用方案：按語言選擇
+    // 3. 根據語言和性別選擇
     if (!chineseVoice) {
-      chineseVoice = voices.find(voice =>
-        voice.lang.includes(voiceConfig.lang) ||
-        voice.lang.includes('zh-TW') ||
-        voice.lang.includes('zh-Hant') ||
-        voice.name.includes('Taiwan') ||
-        voice.name.includes('臺灣')
-      )
+      const targetLang = voiceConfig.lang.split('-')[0]
+      const genderKeyword = voiceConfig.gender.toLowerCase()
+
+      chineseVoice = voices.find(voice => {
+        const langMatch = voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
+        const nameMatch = voice.name.toLowerCase().includes(genderKeyword)
+        return langMatch && nameMatch
+      })
+
+      if (chineseVoice) {
+        console.log(`✅ [Lesson TTS] Found voice by lang+gender: ${chineseVoice.name}`)
+      }
     }
 
-    // 4. 最終備用：任何中文語音
+    // 4. 備用方案：按語言選擇
+    if (!chineseVoice) {
+      const targetLang = voiceConfig.lang.split('-')[0]
+      chineseVoice = voices.find(voice =>
+        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
+      )
+      if (chineseVoice) {
+        console.log(`✅ [Lesson TTS] Found voice by lang: ${chineseVoice.name}`)
+      }
+    }
+
+    // 5. 最終備用：任何中文語音
     if (!chineseVoice) {
       chineseVoice = voices.find(voice => voice.lang.includes('zh'))
+      if (chineseVoice) {
+        console.log(`⚠️ [Lesson TTS] Using fallback Chinese voice: ${chineseVoice.name}`)
+      }
+    }
+
+    if (!chineseVoice) {
+      console.error('❌ [Lesson TTS] No Chinese voice found!')
+    } else {
+      console.log(`🔊 [Lesson TTS] Final Chinese voice: ${chineseVoice.name} (${chineseVoice.lang})`)
     }
 
     // 🔧 按順序播放每個段落，使用正確的語音引擎
