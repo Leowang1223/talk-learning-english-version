@@ -61,21 +61,29 @@ RUN echo "" && \
     echo "=== Building TypeScript (詳細模式) ===" && \
     npm run build --verbose 2>&1 | tee build.log && \
     echo "" && \
-    echo "=== Build command completed ===" && \
+    echo "=== Build command completed (exit code: $?) ===" && \
     echo "" && \
     echo "=== Checking current directory ===" && \
     pwd && \
+    echo "" && \
+    echo "=== Current directory contents ===" && \
     ls -la && \
     echo "" && \
     echo "=== Checking if dist directory exists ===" && \
     if [ -d "dist" ]; then \
         echo "✓ dist directory exists"; \
-        echo "=== dist directory contents (detailed) ==="; \
-        ls -laR dist/; \
+        echo "" && \
+        echo "=== dist directory contents (full recursive) ==="; \
+        ls -laR dist/ && \
+        echo "" && \
+        echo "=== Counting files in dist ==="; \
+        find dist -type f | wc -l && \
+        find dist -type f; \
     else \
         echo "✗ dist directory NOT found!"; \
-        echo "=== Current directory full listing ==="; \
-        ls -laR .; \
+        echo "" && \
+        echo "=== Searching for compiled .js files ==="; \
+        find . -name "*.js" -not -path "*/node_modules/*" -not -path "*/.npm/*" | head -20; \
         exit 1; \
     fi
 
