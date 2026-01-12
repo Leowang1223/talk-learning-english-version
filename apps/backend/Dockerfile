@@ -1,45 +1,47 @@
 # ========================================
-# Backend Dockerfile for Railway Deployment
-# Optimized for Monorepo Structure
+# Talk Learning Backend - Railway Deployment
+# Optimized for Monorepo with Complete Debugging
 # ========================================
 
+# ========================================
+# Stage 1: Builder
+# ========================================
 FROM node:20-alpine AS builder
 
-# 安裝必要的構建工具
+# 安裝構建工具
 RUN apk add --no-cache python3 make g++
 
-WORKDIR /build
+# 設置工作目錄
+WORKDIR /workspace
 
 # 複製整個 monorepo
 COPY . .
 
-# 顯示複製的內容
-RUN echo "=== Repository structure ===" && \
+# 驗證複製成功
+RUN echo "=== Workspace structure ===" && \
     ls -la && \
     echo "" && \
-    echo "=== Apps directory ===" && \
-    ls -la apps/ && \
-    echo "" && \
-    echo "=== Backend directory ===" && \
-    ls -la apps/backend/ && \
-    echo "" && \
-    echo "=== Backend src directory ===" && \
-    ls -la apps/backend/src/
+    echo "=== Verifying backend exists ===" && \
+    test -d apps/backend && echo "✓ apps/backend exists" || (echo "✗ apps/backend missing!" && exit 1)
 
-# 安裝根目錄依賴
+# 安裝根依賴
 RUN echo "=== Installing root dependencies ===" && \
-    npm install --legacy-peer-deps
+    npm install --legacy-peer-deps && \
+    echo "✓ Root dependencies installed"
 
-# 切換到 backend 目錄
-WORKDIR /build/apps/backend
+# 進入 backend 目錄
+WORKDIR /workspace/apps/backend
 
-# 顯示 package.json 內容
-RUN echo "=== Backend package.json ===" && \
-    cat package.json
+# 驗證關鍵文件存在
+RUN echo "=== Verifying backend files ===" && \
+    test -f package.json && echo "✓ package.json exists" || exit 1 && \
+    test -f tsconfig.json && echo "✓ tsconfig.json exists" || exit 1 && \
+    test -d src && echo "✓ src/ directory exists" || exit 1 && \
+    test -f src/server.ts && echo "✓ src/server.ts exists" || exit 1
 
-# 顯示 tsconfig.json 內容
+# 顯示配置文件
 RUN echo "" && \
-    echo "=== Backend tsconfig.json ===" && \
+    echo "=== tsconfig.json ===" && \
     cat tsconfig.json
 
 # 安裝 backend 依賴
@@ -47,98 +49,80 @@ RUN echo "" && \
     echo "=== Installing backend dependencies ===" && \
     npm install --legacy-peer-deps && \
     echo "" && \
-    echo "=== Checking node_modules ===" && \
-    ls -la node_modules/ | head -20 && \
+    echo "✓ Backend dependencies installed" && \
     echo "" && \
-    echo "=== Checking TypeScript installation ===" && \
+    echo "=== Verifying TypeScript ===" && \
     npx tsc --version
 
-# 清理舊的 dist 目錄（如果存在）
-RUN rm -rf dist/
-
-# 構建 TypeScript 代碼（詳細輸出）
+# 構建 TypeScript
 RUN echo "" && \
-    echo "=== Building TypeScript (詳細模式) ===" && \
-    npm run build --verbose 2>&1 | tee build.log && \
+    echo "=== Building TypeScript ===" && \
+    npm run build && \
     echo "" && \
-    echo "=== Build command completed (exit code: $?) ===" && \
-    echo "" && \
-    echo "=== Checking current directory ===" && \
-    pwd && \
-    echo "" && \
-    echo "=== Current directory contents ===" && \
-    ls -la && \
-    echo "" && \
-    echo "=== Checking if dist directory exists ===" && \
-    if [ -d "dist" ]; then \
-        echo "✓ dist directory exists"; \
-        echo "" && \
-        echo "=== dist directory contents (full recursive) ==="; \
-        ls -laR dist/ && \
-        echo "" && \
-        echo "=== Counting files in dist ==="; \
-        find dist -type f | wc -l && \
-        find dist -type f; \
-    else \
-        echo "✗ dist directory NOT found!"; \
-        echo "" && \
-        echo "=== Searching for compiled .js files ==="; \
-        find . -name "*.js" -not -path "*/node_modules/*" -not -path "*/.npm/*" | head -20; \
-        exit 1; \
-    fi
+    echo "✓ TypeScript build completed"
 
-# 驗證 server.js 存在
+# 驗證構建輸出
 RUN echo "" && \
-    echo "=== Verifying server.js ===" && \
-    if [ -f "dist/server.js" ]; then \
-        echo "✓ dist/server.js exists"; \
-        echo "File size: $(wc -c < dist/server.js) bytes"; \
-        echo "First 10 lines:"; \
-        head -10 dist/server.js; \
-    else \
-        echo "✗ dist/server.js NOT found!"; \
-        echo "=== Build log contents ==="; \
-        cat build.log || echo "No build log found"; \
-        echo "=== TypeScript compiler output ==="; \
-        npx tsc --listFiles || echo "tsc failed"; \
-        exit 1; \
-    fi
+    echo "=== Verifying build output ===" && \
+    test -d dist && echo "✓ dist/ directory created" || (echo "✗ dist/ directory missing!" && exit 1) && \
+    test -f dist/server.js && echo "✓ dist/server.js exists" || (echo "✗ dist/server.js missing!" && exit 1) && \
+    echo "" && \
+    echo "=== Build artifacts ===" && \
+    ls -lh dist/ && \
+    echo "" && \
+    echo "File count: $(find dist -type f | wc -l)" && \
+    echo "Total size: $(du -sh dist/ | cut -f1)"
 
 # ========================================
-# Production Stage
+# Stage 2: Production
 # ========================================
-FROM node:20-alpine
+FROM node:20-alpine AS production
+
+# 安裝運行時依賴
+RUN apk add --no-cache wget
 
 WORKDIR /app
 
+# 複製 package files
+COPY --from=builder /workspace/apps/backend/package*.json ./
+
+# 安裝生產依賴（不包含 devDependencies）
+RUN echo "=== Installing production dependencies ===" && \
+    npm ci --only=production --legacy-peer-deps && \
+    echo "✓ Production dependencies installed"
+
 # 複製構建產物
-COPY --from=builder /build/apps/backend/dist ./dist
-COPY --from=builder /build/apps/backend/package*.json ./
-COPY --from=builder /build/apps/backend/node_modules ./node_modules
+COPY --from=builder /workspace/apps/backend/dist ./dist
 
-# 複製課程和場景數據
-COPY --from=builder /build/apps/backend/src/plugins ./src/plugins
+# 複製課程數據
+COPY --from=builder /workspace/apps/backend/src/plugins ./src/plugins
 
-# 複製 shared 包（如果運行時需要）
-COPY --from=builder /build/apps/shared ../shared
+# 複製 shared 包（運行時可能需要）
+COPY --from=builder /workspace/apps/shared ../shared
 
-# 創建必要的目錄
+# 創建日誌目錄
 RUN mkdir -p logs/sessions
 
 # 最終驗證
 RUN echo "=== Final verification ===" && \
-    echo "Current directory: $(pwd)" && \
+    echo "Working directory: $(pwd)" && \
     echo "" && \
-    echo "Directory structure:" && \
-    ls -laR && \
+    test -f dist/server.js && echo "✓ dist/server.js exists" || (echo "✗ dist/server.js missing!" && exit 1) && \
+    test -d node_modules && echo "✓ node_modules exists" || (echo "✗ node_modules missing!" && exit 1) && \
+    test -d src/plugins && echo "✓ src/plugins exists" || (echo "✗ src/plugins missing!" && exit 1) && \
     echo "" && \
-    echo "Verifying dist/server.js:" && \
-    test -f dist/server.js && echo "✓ dist/server.js exists" || (echo "✗ dist/server.js missing!" && exit 1)
+    echo "=== Final structure ===" && \
+    ls -lh && \
+    echo "" && \
+    echo "=== dist/ contents ===" && \
+    ls -lh dist/ | head -10 && \
+    echo "" && \
+    echo "✓ All verifications passed!"
 
 # 設置環境變量
 ENV NODE_ENV=production
 
-# 暴露端口
+# 暴露端口（Railway 會通過 PORT 環境變量注入實際端口）
 EXPOSE 8082
 
 # 健康檢查
