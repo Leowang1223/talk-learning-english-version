@@ -96,13 +96,13 @@
     },
     {
       "id": 9,
-      "teacher": "I'm good.",
+      "teacher": "I'm fine.",
       "expected_answer": [
-        "I'm good."
+        "I'm fine."
       ],
       "chinese_hint": "我沒事。",
       "encouragement": "Perfect answer!",
-      "tts_text": "I'm good.",
+      "tts_text": "I'm fine.",
       "tts_voice": "en-US-JennyNeural"
     },
     {
