@@ -143,9 +143,9 @@ export function DialogSidebar({ messages, suggestions, onPlayTTS, isLoading, cur
                 )}
 
                 {/* TTS Button for instructor messages */}
-                {message.role === 'instructor' && (
+                {message.role === 'instructor' && message.english && (
                   <button
-                    onClick={() => onPlayTTS(message.english)}
+                    onClick={() => onPlayTTS(message.english!)}
                     className="mt-2 flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
                   >
                     <Volume2 className="h-3 w-3" />
