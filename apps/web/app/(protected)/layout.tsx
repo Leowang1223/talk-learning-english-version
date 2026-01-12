@@ -1,6 +1,9 @@
 import AuthGuard from '@/components/AuthGuard'
 import CollapsibleSidebar from '@/components/layout/CollapsibleSidebar'
 
+// Force dynamic rendering for all protected pages
+export const dynamic = 'force-dynamic'
+
 export default function ProtectedLayout({
   children,
 }: {
