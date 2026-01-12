@@ -9,6 +9,9 @@ import ScenarioSelector from './components/ScenarioSelector'
 import RoleSelector from './components/RoleSelector'
 import { apiGetScenarioById, type Scenario } from '@/lib/api'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 interface LessonHistoryEntry {
   sessionId: string
   lessonId: string

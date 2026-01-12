@@ -10,6 +10,9 @@ import ProgressTracker from '../components/ProgressTracker'
 import CompletionPrompt from '../components/CompletionPrompt'
 import { type ScenarioCheckpoint, apiGetScenarioById, fetchJson, getApiBase } from '@/lib/api'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // TTS utility functions (copied from lesson page)
 function removePinyin(text: string): string {
   if (!text) return ''

@@ -12,6 +12,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ttsPlayer } from '@/lib/ttsPlayer'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export default function MockInterviewPage() {
   const search = useSearchParams()

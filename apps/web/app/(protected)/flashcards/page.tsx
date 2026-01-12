@@ -28,6 +28,9 @@ import { useRouter } from 'next/navigation'
 
 import styles from './flashcard.module.css'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 interface DeckCard {
   id: string
   front: string

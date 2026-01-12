@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useMediaSession } from '@/lib/media/MediaSessionProvider'
 import TopBar from '@/components/TopBar'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 type MediaDevice = Pick<MediaDeviceInfo, 'deviceId' | 'kind' | 'label'>
 
 export default function PreparePage() {

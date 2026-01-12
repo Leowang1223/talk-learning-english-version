@@ -26,6 +26,9 @@ ChartJS.register(
   Legend
 )
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 interface LessonHistory {
   sessionId: string
   lessonId: string

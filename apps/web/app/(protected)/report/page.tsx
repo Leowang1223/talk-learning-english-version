@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import TopBar from '@/components/TopBar';
 import { apiGenerateReport, type Report } from '@/lib/api';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function ReportPage() {
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(false);

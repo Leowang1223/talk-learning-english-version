@@ -24,6 +24,9 @@ ChartJS.register(
   Legend
 );
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 type Radar = { pronunciation:number; fluency:number; accuracy:number; comprehension:number; confidence:number };
 type Overview = { total_score:number; radar:Radar; totals:{ num_questions:number; avg_think:number; avg_answer:number } };
 type Row = { qid?:string; index?:number; title_short:string; scores:Radar & { total:number }; metrics:{ tpm:number; ratio:number; token_count:number }; advice?: string; optimized?: string };

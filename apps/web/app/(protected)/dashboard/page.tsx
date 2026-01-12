@@ -4,6 +4,9 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 interface StatsState {
   lessons: number
   avgScore: number
