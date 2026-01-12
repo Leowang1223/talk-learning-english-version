@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Mic, MicOff, PhoneOff, Loader2, AlertCircle } from 'lucide-react'
 import { DialogSidebar, type Message, type Suggestion } from '../components/DialogSidebar'
-import { InterviewerSelector, getInterviewerImagePath, getInterviewerVoice, DEFAULT_INTERVIEWER } from '../../lesson/components/InterviewerSelector'
+import { InterviewerSelector, getInterviewerImagePath, getInterviewerVoice, getInterviewerEnglishVoice, DEFAULT_INTERVIEWER } from '../../lesson/components/InterviewerSelector'
 import ProgressTracker from '../components/ProgressTracker'
 import CompletionPrompt from '../components/CompletionPrompt'
 import { type ScenarioCheckpoint, apiGetScenarioById, fetchJson, getApiBase } from '@/lib/api'
@@ -353,9 +353,9 @@ export default function ConversationChatPage() {
         }
         setMessages([firstMessage])
 
-        // Play TTS with dynamic voice detection
+        // Play TTS with dynamic voice detection (English for conversation practice)
         console.log('🎬 Preparing to play first message TTS...')
-        const chineseText = firstMessage.chinese
+        const englishText = firstMessage.english
         const playFirstMessageTTS = async () => {
           let attempts = 0
           const maxAttempts = 20  // 最多等待 2 秒
@@ -364,7 +364,7 @@ export default function ConversationChatPage() {
             const voices = window.speechSynthesis.getVoices()
             if (voices.length > 0) {
               console.log('✅ TTS voices loaded, playing first message')
-              playTTS(chineseText)
+              playTTS(englishText, 'english')
               return
             }
             await new Promise(r => setTimeout(r, 100))
@@ -373,7 +373,7 @@ export default function ConversationChatPage() {
 
           // 超時仍播放，使用默認聲音
           console.warn('⚠️ TTS voices not ready after 2s, playing with default voice')
-          playTTS(chineseText)
+          playTTS(englishText, 'english')
         }
 
         playFirstMessageTTS()
@@ -395,8 +395,8 @@ export default function ConversationChatPage() {
     }
   }
 
-  // TTS playback with interviewer voice
-  const playTTS = (text: string) => {
+  // TTS playback with bilingual support (English for AI, Chinese for hints)
+  const playTTS = (text: string, language: 'english' | 'chinese' = 'english') => {
     if (!text || !('speechSynthesis' in window)) {
       console.log('⚠️ TTS unavailable: text or speechSynthesis missing')
       return
@@ -406,53 +406,73 @@ export default function ConversationChatPage() {
     window.speechSynthesis.cancel()
 
     // Clean the text
-    let cleanText = removePinyin(text)
-    cleanText = convertSymbolsToWords(cleanText)
-    cleanText = removePunctuation(cleanText)
+    let cleanText = text
+    if (language === 'chinese') {
+      cleanText = removePinyin(text)
+      cleanText = convertSymbolsToWords(cleanText)
+      cleanText = removePunctuation(cleanText)
+    } else {
+      // For English, just basic cleanup
+      cleanText = text.replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ').trim()
+    }
 
     if (!cleanText.trim()) {
       console.log('⚠️ TTS skipped: no text after cleaning')
       return
     }
 
-    // Get voices (should already be loaded from useEffect)
-    const voiceConfig = getInterviewerVoice(currentInterviewer)
+    // Get appropriate voice configuration
+    const voiceConfig = language === 'english'
+      ? getInterviewerEnglishVoice(currentInterviewer)
+      : getInterviewerVoice(currentInterviewer)
+
     const voices = window.speechSynthesis.getVoices()
 
     if (voices.length === 0) {
       console.warn('⚠️ TTS voices not loaded yet, speech may use default voice')
     }
 
-    // Try to find preferred Chinese voice
-    let chineseVoice: SpeechSynthesisVoice | undefined
+    // Try to find appropriate voice
+    let selectedVoice: SpeechSynthesisVoice | undefined
 
+    // First try: preferred voice name
     if (voiceConfig.preferredVoiceName) {
       const preferredName = voiceConfig.preferredVoiceName
-      chineseVoice = voices.find(voice =>
+      selectedVoice = voices.find(voice =>
         voice.name === preferredName ||
         voice.name.includes(preferredName)
       )
     }
 
-    if (!chineseVoice) {
-      chineseVoice = voices.find(voice => voice.lang.includes(voiceConfig.lang))
+    // Second try: match by language and gender
+    if (!selectedVoice) {
+      selectedVoice = voices.find(voice =>
+        voice.lang.startsWith(voiceConfig.lang.split('-')[0]) &&
+        voice.name.toLowerCase().includes(voiceConfig.gender)
+      )
+    }
+
+    // Third try: any voice with matching language
+    if (!selectedVoice) {
+      selectedVoice = voices.find(voice => voice.lang.includes(voiceConfig.lang))
     }
 
     // Create and configure utterance
     const utterance = new SpeechSynthesisUtterance(cleanText)
-    if (chineseVoice) {
-      utterance.voice = chineseVoice
-      console.log('🔊 Using voice:', chineseVoice.name)
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice
+      console.log(`🔊 Using ${language} voice:`, selectedVoice.name)
     } else {
-      console.log('🔊 Using default voice (no Chinese voice found)')
+      console.log(`🔊 Using default ${language} voice (no matching voice found)`)
     }
+
     utterance.lang = voiceConfig.lang
     utterance.rate = voiceConfig.rate
     utterance.pitch = voiceConfig.pitch
     utterance.volume = 1.0
 
-    // Log and play
-    console.log('🔊 Playing TTS:', cleanText.substring(0, 30) + '...')
+    console.log(`🔊 Playing ${language} TTS:`, cleanText.substring(0, 30) + '...')
     window.speechSynthesis.speak(utterance)
   }
 
@@ -549,8 +569,8 @@ export default function ConversationChatPage() {
           setSuggestions(data.suggestions)
         }
 
-        // Play TTS for instructor response
-        playTTS(data.instructorReply.chinese)
+        // Play TTS for instructor response (English for conversation practice)
+        playTTS(data.instructorReply.english, 'english')
       }, 500)
     } catch (error) {
       console.error('Failed to send message:', error)

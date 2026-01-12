@@ -406,7 +406,10 @@ export default function FlashcardsPage() {
                         <div
                           className={`${styles.face} flex flex-col justify-between bg-white px-10 py-8 text-center`}
                         >
-                          <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden">
+                          <div className="flex-1 flex flex-col justify-center gap-4 overflow-hidden">
+                            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                              English
+                            </h3>
                             <p className="break-words text-4xl font-semibold leading-tight text-slate-900">
                               {activeCard.front}
                             </p>
@@ -449,7 +452,9 @@ export default function FlashcardsPage() {
               <div className="mx-auto mt-6 max-w-2xl rounded-[28px] border border-slate-200/70 bg-white/70 p-6 text-sm text-slate-500 shadow-inner">
                 <div className="font-semibold uppercase tracking-wide text-slate-400">Tips</div>
                 <ul className="mt-3 space-y-2 text-slate-500">
-                  <li>- Click the card to flip between Chinese and English.</li>
+                  <li>- Front: English word/phrase (what you're learning)</li>
+                  <li>- Back: Chinese meaning (translation)</li>
+                  <li>- Click the card to flip between front and back.</li>
                   <li>- Drag left or right to cycle through the deck.</li>
                   <li>- Use the audio button to hear the pronunciation.</li>
                 </ul>

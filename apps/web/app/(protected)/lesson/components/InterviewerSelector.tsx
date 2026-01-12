@@ -14,6 +14,13 @@ interface Interviewer {
     rate: number
     preferredVoiceName?: string
   }
+  englishVoice: {
+    lang: string
+    gender: 'male' | 'female'
+    pitch: number
+    rate: number
+    preferredVoiceName?: string
+  }
 }
 
 // 所有可用的講師（含語音配置）
@@ -29,6 +36,13 @@ const INTERVIEWERS: Interviewer[] = [
       rate: 0.95,
       preferredVoiceName: 'Microsoft Yun-Jhe Online (Natural) - Chinese (Taiwan)',
     },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'male',
+      pitch: 0.8,
+      rate: 0.9,
+      preferredVoiceName: 'Microsoft David Online (Natural) - English (United States)',
+    },
   },
   {
     id: 'cendy',
@@ -40,6 +54,13 @@ const INTERVIEWERS: Interviewer[] = [
       pitch: 1.35,
       rate: 1.05,
       preferredVoiceName: 'Microsoft HsiaoChen Online (Natural) - Chinese (Taiwan)',
+    },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'female',
+      pitch: 1.3,
+      rate: 1.05,
+      preferredVoiceName: 'Microsoft Aria Online (Natural) - English (United States)',
     },
   },
   {
@@ -53,6 +74,13 @@ const INTERVIEWERS: Interviewer[] = [
       rate: 1.1,
       preferredVoiceName: 'Microsoft HsiaoYu Online (Natural) - Chinese (Taiwan)',
     },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'female',
+      pitch: 1.2,
+      rate: 1.1,
+      preferredVoiceName: 'Microsoft Jenny Online (Natural) - English (United States)',
+    },
   },
   {
     id: 'john',
@@ -64,6 +92,13 @@ const INTERVIEWERS: Interviewer[] = [
       pitch: 0.7,
       rate: 0.9,
       preferredVoiceName: 'Microsoft Yun-Chuan Online (Natural) - Chinese (Taiwan)',
+    },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'male',
+      pitch: 0.75,
+      rate: 0.85,
+      preferredVoiceName: 'Microsoft Guy Online (Natural) - English (United States)',
     },
   },
   {
@@ -77,6 +112,13 @@ const INTERVIEWERS: Interviewer[] = [
       rate: 1.05,
       preferredVoiceName: 'Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)',
     },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'female',
+      pitch: 1.25,
+      rate: 1.0,
+      preferredVoiceName: 'Microsoft Michelle Online (Natural) - English (United States)',
+    },
   },
   {
     id: 'nina',
@@ -88,6 +130,13 @@ const INTERVIEWERS: Interviewer[] = [
       pitch: 1.2,
       rate: 1.15,
       preferredVoiceName: 'Microsoft Xiaoyi Online (Natural) - Chinese (Mainland)',
+    },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'female',
+      pitch: 1.15,
+      rate: 1.1,
+      preferredVoiceName: 'Microsoft Emma Online (Natural) - English (United States)',
     },
   },
   {
@@ -101,6 +150,13 @@ const INTERVIEWERS: Interviewer[] = [
       rate: 0.95,
       preferredVoiceName: 'Microsoft Yun-Jhe Online (Natural) - Chinese (Taiwan)',
     },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'male',
+      pitch: 0.85,
+      rate: 0.95,
+      preferredVoiceName: 'Microsoft Eric Online (Natural) - English (United States)',
+    },
   },
   {
     id: 'jan',
@@ -112,6 +168,13 @@ const INTERVIEWERS: Interviewer[] = [
       pitch: 1.15,
       rate: 1.0,
       preferredVoiceName: 'Microsoft HsiaoChen Online (Natural) - Chinese (Taiwan)',
+    },
+    englishVoice: {
+      lang: 'en-US',
+      gender: 'female',
+      pitch: 1.1,
+      rate: 1.0,
+      preferredVoiceName: 'Microsoft Sara Online (Natural) - English (United States)',
     },
   },
 ]
@@ -251,6 +314,18 @@ export function getInterviewerName(interviewerId: string): string {
 export function getInterviewerVoice(interviewerId: string) {
   const interviewer = INTERVIEWERS.find((i) => i.id === interviewerId)
   return interviewer?.voice || INTERVIEWERS[0].voice
+}
+
+// 工具函數：獲取講師英文語音配置
+export function getInterviewerEnglishVoice(interviewerId: string) {
+  const interviewer = INTERVIEWERS.find((i) => i.id === interviewerId)
+  return interviewer?.englishVoice || {
+    lang: 'en-US',
+    gender: 'female' as const,
+    pitch: 1.0,
+    rate: 1.0,
+    preferredVoiceName: 'Microsoft Jenny Online (Natural) - English (United States)',
+  }
 }
 
 // 默認講師
