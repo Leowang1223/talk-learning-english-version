@@ -142,8 +142,8 @@ export default function FlashcardsPage() {
     const source = card.custom ? 'custom' : 'practice-saved'
     return {
       id: `local-${card.id}`,
-      front: card.expectedAnswer || '',  // 英文（要學的）
-      back: card.prompt || '',  // 中文翻譯
+      front: card.prompt || '',  // 正面：英文（要學的內容）
+      back: card.expectedAnswer || '',  // 背面：中文翻譯
       pinyin: card.pinyin,
       createdAt,
       deckName: card.deckName || (card.custom ? 'Custom Card' : 'Practice Saved'),

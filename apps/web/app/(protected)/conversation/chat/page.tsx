@@ -426,7 +426,10 @@ export default function ConversationChatPage() {
       ? getInterviewerEnglishVoice(currentInterviewer)
       : getInterviewerVoice(currentInterviewer)
 
+    console.log(`🎤 Interviewer: ${currentInterviewer}, Language: ${language}, Config:`, voiceConfig)
+
     const voices = window.speechSynthesis.getVoices()
+    console.log(`📢 Available voices (${voices.length}):`, voices.map(v => `${v.name} (${v.lang})`).slice(0, 10))
 
     if (voices.length === 0) {
       console.warn('⚠️ TTS voices not loaded yet, speech may use default voice')
@@ -435,26 +438,48 @@ export default function ConversationChatPage() {
     // Try to find appropriate voice
     let selectedVoice: SpeechSynthesisVoice | undefined
 
-    // First try: preferred voice name
+    // First try: preferred voice name (exact match)
     if (voiceConfig.preferredVoiceName) {
       const preferredName = voiceConfig.preferredVoiceName
-      selectedVoice = voices.find(voice =>
-        voice.name === preferredName ||
-        voice.name.includes(preferredName)
-      )
+      selectedVoice = voices.find(voice => voice.name === preferredName)
+      if (selectedVoice) {
+        console.log(`✅ Found preferred voice (exact): ${selectedVoice.name}`)
+      }
     }
 
-    // Second try: match by language and gender
+    // Second try: preferred voice name (partial match)
+    if (!selectedVoice && voiceConfig.preferredVoiceName) {
+      const preferredParts = voiceConfig.preferredVoiceName.toLowerCase().split(' ')
+      selectedVoice = voices.find(voice => {
+        const voiceNameLower = voice.name.toLowerCase()
+        return preferredParts.some(part => part.length > 3 && voiceNameLower.includes(part))
+      })
+      if (selectedVoice) {
+        console.log(`✅ Found preferred voice (partial): ${selectedVoice.name}`)
+      }
+    }
+
+    // Third try: match by language and gender
     if (!selectedVoice) {
+      const targetLang = voiceConfig.lang.split('-')[0]
       selectedVoice = voices.find(voice =>
-        voice.lang.startsWith(voiceConfig.lang.split('-')[0]) &&
+        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase()) &&
         voice.name.toLowerCase().includes(voiceConfig.gender)
       )
+      if (selectedVoice) {
+        console.log(`✅ Found voice by lang+gender: ${selectedVoice.name}`)
+      }
     }
 
-    // Third try: any voice with matching language
+    // Fourth try: any voice with matching language
     if (!selectedVoice) {
-      selectedVoice = voices.find(voice => voice.lang.includes(voiceConfig.lang))
+      const targetLang = voiceConfig.lang.split('-')[0]
+      selectedVoice = voices.find(voice =>
+        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
+      )
+      if (selectedVoice) {
+        console.log(`✅ Found voice by lang: ${selectedVoice.name}`)
+      }
     }
 
     // Create and configure utterance
@@ -462,9 +487,9 @@ export default function ConversationChatPage() {
 
     if (selectedVoice) {
       utterance.voice = selectedVoice
-      console.log(`🔊 Using ${language} voice:`, selectedVoice.name)
+      console.log(`🔊 Using ${language} voice:`, selectedVoice.name, `(${selectedVoice.lang})`)
     } else {
-      console.log(`🔊 Using default ${language} voice (no matching voice found)`)
+      console.log(`⚠️ Using default ${language} voice (no matching voice found)`)
     }
 
     utterance.lang = voiceConfig.lang
@@ -472,7 +497,8 @@ export default function ConversationChatPage() {
     utterance.pitch = voiceConfig.pitch
     utterance.volume = 1.0
 
-    console.log(`🔊 Playing ${language} TTS:`, cleanText.substring(0, 30) + '...')
+    console.log(`🔊 Playing ${language} TTS:`, cleanText.substring(0, 50) + '...')
+    console.log(`📝 Full text to speak:`, cleanText)
     window.speechSynthesis.speak(utterance)
   }
 
