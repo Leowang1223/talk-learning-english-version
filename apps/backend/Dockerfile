@@ -10,40 +10,91 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /build
 
-# 複製整個 monorepo（Railway 構建上下文是 repo 根目錄）
+# 複製整個 monorepo
 COPY . .
 
-# 顯示複製的內容（調試用）
+# 顯示複製的內容
 RUN echo "=== Repository structure ===" && \
     ls -la && \
+    echo "" && \
     echo "=== Apps directory ===" && \
     ls -la apps/ && \
+    echo "" && \
     echo "=== Backend directory ===" && \
-    ls -la apps/backend/
+    ls -la apps/backend/ && \
+    echo "" && \
+    echo "=== Backend src directory ===" && \
+    ls -la apps/backend/src/
 
 # 安裝根目錄依賴
-RUN npm install --legacy-peer-deps
+RUN echo "=== Installing root dependencies ===" && \
+    npm install --legacy-peer-deps
 
 # 切換到 backend 目錄
 WORKDIR /build/apps/backend
 
+# 顯示 package.json 內容
+RUN echo "=== Backend package.json ===" && \
+    cat package.json
+
+# 顯示 tsconfig.json 內容
+RUN echo "" && \
+    echo "=== Backend tsconfig.json ===" && \
+    cat tsconfig.json
+
 # 安裝 backend 依賴
-RUN echo "=== Installing backend dependencies ===" && \
-    npm install --legacy-peer-deps
+RUN echo "" && \
+    echo "=== Installing backend dependencies ===" && \
+    npm install --legacy-peer-deps && \
+    echo "" && \
+    echo "=== Checking node_modules ===" && \
+    ls -la node_modules/ | head -20 && \
+    echo "" && \
+    echo "=== Checking TypeScript installation ===" && \
+    npx tsc --version
 
-# 顯示 backend package.json 的 scripts
-RUN echo "=== Package.json scripts ===" && \
-    cat package.json | grep -A 5 '"scripts"'
+# 清理舊的 dist 目錄（如果存在）
+RUN rm -rf dist/
 
-# 構建 TypeScript 代碼
-RUN echo "=== Building TypeScript ===" && \
-    npm run build && \
-    echo "=== Build completed ===" && \
-    echo "=== Checking dist directory ===" && \
-    ls -laR dist/
+# 構建 TypeScript 代碼（詳細輸出）
+RUN echo "" && \
+    echo "=== Building TypeScript (詳細模式) ===" && \
+    npm run build --verbose 2>&1 | tee build.log && \
+    echo "" && \
+    echo "=== Build command completed ===" && \
+    echo "" && \
+    echo "=== Checking current directory ===" && \
+    pwd && \
+    ls -la && \
+    echo "" && \
+    echo "=== Checking if dist directory exists ===" && \
+    if [ -d "dist" ]; then \
+        echo "✓ dist directory exists"; \
+        echo "=== dist directory contents (detailed) ==="; \
+        ls -laR dist/; \
+    else \
+        echo "✗ dist directory NOT found!"; \
+        echo "=== Current directory full listing ==="; \
+        ls -laR .; \
+        exit 1; \
+    fi
 
 # 驗證 server.js 存在
-RUN test -f dist/server.js || (echo "ERROR: dist/server.js not found!" && exit 1)
+RUN echo "" && \
+    echo "=== Verifying server.js ===" && \
+    if [ -f "dist/server.js" ]; then \
+        echo "✓ dist/server.js exists"; \
+        echo "File size: $(wc -c < dist/server.js) bytes"; \
+        echo "First 10 lines:"; \
+        head -10 dist/server.js; \
+    else \
+        echo "✗ dist/server.js NOT found!"; \
+        echo "=== Build log contents ==="; \
+        cat build.log || echo "No build log found"; \
+        echo "=== TypeScript compiler output ==="; \
+        npx tsc --listFiles || echo "tsc failed"; \
+        exit 1; \
+    fi
 
 # ========================================
 # Production Stage
@@ -66,10 +117,14 @@ COPY --from=builder /build/apps/shared ../shared
 # 創建必要的目錄
 RUN mkdir -p logs/sessions
 
-# 驗證文件結構
-RUN echo "=== Final app structure ===" && \
+# 最終驗證
+RUN echo "=== Final verification ===" && \
+    echo "Current directory: $(pwd)" && \
+    echo "" && \
+    echo "Directory structure:" && \
     ls -laR && \
-    echo "=== Verifying dist/server.js ===" && \
+    echo "" && \
+    echo "Verifying dist/server.js:" && \
     test -f dist/server.js && echo "✓ dist/server.js exists" || (echo "✗ dist/server.js missing!" && exit 1)
 
 # 設置環境變量
