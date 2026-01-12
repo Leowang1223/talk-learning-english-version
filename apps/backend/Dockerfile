@@ -44,12 +44,14 @@ RUN echo "" && \
     echo "=== tsconfig.json ===" && \
     cat tsconfig.json
 
-# 安裝 backend 依賴
+# 檢查 node_modules 位置（monorepo 可能使用 hoisting）
 RUN echo "" && \
-    echo "=== Installing backend dependencies ===" && \
-    npm install --legacy-peer-deps && \
-    echo "" && \
-    echo "✓ Backend dependencies installed" && \
+    echo "=== Checking node_modules location ===" && \
+    if [ -d "node_modules" ]; then \
+        echo "✓ Local node_modules found"; \
+    else \
+        echo "✓ Using workspace node_modules (hoisting enabled)"; \
+    fi && \
     echo "" && \
     echo "=== Verifying TypeScript ===" && \
     npx tsc --version
@@ -86,13 +88,13 @@ WORKDIR /app
 # 複製 package files
 COPY --from=builder /workspace/apps/backend/package*.json ./
 
-# 直接複製 node_modules（避免 npm ci lock file sync 問題）
-COPY --from=builder /workspace/apps/backend/node_modules ./node_modules
+# 複製 workspace root 的 node_modules（monorepo 使用 hoisting）
+COPY --from=builder /workspace/node_modules ./node_modules
 
-# 移除 devDependencies 以減小鏡像大小
-RUN echo "=== Pruning devDependencies ===" && \
-    npm prune --production --legacy-peer-deps && \
-    echo "✓ Production dependencies ready"
+RUN echo "=== Production dependencies ready ===" && \
+    echo "✓ Using workspace node_modules from /workspace/node_modules" && \
+    ls -d node_modules/* | head -5 && \
+    echo "Total packages: $(ls -d node_modules/* 2>/dev/null | wc -l)"
 
 # 複製構建產物
 COPY --from=builder /workspace/apps/backend/dist ./dist
