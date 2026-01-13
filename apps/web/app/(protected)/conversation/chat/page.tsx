@@ -263,7 +263,7 @@ export default function ConversationChatPage() {
       } else if (loadedSettings.topicMode === 'all') {
         // Fetch all available chapters from API
         topics = await getAllAvailableChapterIds()
-        console.log('?? All available chapters:', topics)
+        console.log('📚 All available chapters:', topics)
       }
 
       const requestBody: any = {
@@ -280,17 +280,17 @@ export default function ConversationChatPage() {
 
       // Add review mode parameters
       if (loadedSettings.topicMode === 'all') {
-        // �?localStorage 讀?�已完�?課�?清單
+        // 從 localStorage 讀取已完成課程清單
         const lessonHistory = JSON.parse(localStorage.getItem('lessonHistory') || '[]')
         const completedLessons = lessonHistory.map((h: any) => h.lessonId)
         requestBody.completedLessons = completedLessons
-        console.log('?? Review mode (all): Sending', completedLessons.length, 'completed lessons')
+        console.log('📚 Review mode (all): Sending', completedLessons.length, 'completed lessons')
       } else if (loadedSettings.topicMode === 'selected') {
-        // �?localStorage 讀?�已完�?課�?清單
+        // 從 localStorage 讀取已完成課程清單
         const lessonHistory = JSON.parse(localStorage.getItem('lessonHistory') || '[]')
         const allCompletedLessons = lessonHistory.map((h: any) => h.lessonId)
 
-        // ?�濾?�屬?�選定�?節?�已完�?課�?
+        // 過濾出屬於選定章節的已完成課程
         const selectedChaptersSet = new Set(loadedSettings.selectedTopics)
         const completedLessonsInSelectedChapters = allCompletedLessons.filter((lessonId: string) => {
           const chapterId = lessonId.split('-')[0]
@@ -299,8 +299,8 @@ export default function ConversationChatPage() {
 
         requestBody.selectedChapters = loadedSettings.selectedTopics || []
         requestBody.completedLessons = completedLessonsInSelectedChapters
-        console.log('?? Review mode (selected): Sending chapters', requestBody.selectedChapters)
-        console.log('?? Review mode (selected): Found', completedLessonsInSelectedChapters.length, 'completed lessons in these chapters')
+        console.log('📚 Review mode (selected): Sending chapters', requestBody.selectedChapters)
+        console.log('📚 Review mode (selected): Found', completedLessonsInSelectedChapters.length, 'completed lessons in these chapters')
       }
 
       const data = await fetchJson<{
@@ -539,7 +539,7 @@ export default function ConversationChatPage() {
       })
 
       if (!response.ok) {
-        throw new Error('?�送�??�失??)
+        throw new Error('傳送訊息失敗')
       }
 
       const data = await response.json()
@@ -686,7 +686,7 @@ export default function ConversationChatPage() {
             className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
             <PhoneOff className="h-4 w-4" />
-            <span>結�?對話</span>
+            <span>結束對話</span>
           </button>
         </div>
       </div>
@@ -735,7 +735,7 @@ export default function ConversationChatPage() {
             >
               <Image
                 src={getInterviewerImagePath(currentInterviewer)}
-                alt="AI ?�師"
+                alt="AI 講師"
                 fill
                 className="object-cover"
                 priority
