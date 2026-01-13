@@ -27,7 +27,7 @@ function convertSymbolsToWords(text: string): string {
     '@': 'at',
     '#': 'hashtag number',
     '$': 'dollar',
-    '??: 'euro',
+    '€': 'euro',
     '£': 'pound',
     '¥': 'yen yuan',
     '+': 'plus',
@@ -35,12 +35,12 @@ function convertSymbolsToWords(text: string): string {
     '<': 'less than',
     '>': 'greater than',
   }
-  return text.replace(/[%&@#$?��??=<>]/g, (match) => ` ${symbolMap[match] || match} `)
+  return text.replace(/[%&@#$€£¥+=<>]/g, (match) => ` ${symbolMap[match] || match} `)
 }
 
 function removePunctuation(text: string): string {
   if (!text) return ''
-  return text.replace(/[，。�?？�?：�?"''?�》【】�?）]/g, ' ').replace(/\s+/g, ' ').trim()
+  return text.replace(/[，。！？：；""''《》【】（）]/g, ' ').replace(/\s+/g, ' ').trim()
 }
 
 interface ConversationSettings {
@@ -354,15 +354,15 @@ export default function ConversationChatPage() {
         setMessages([firstMessage])
 
         // Play TTS with dynamic voice detection (English for conversation practice)
-        console.log('?�� Preparing to play first message TTS...')
+        console.log('🎤 Preparing to play first message TTS...')
         const englishText: string = firstMessage.english ?? ''
         const playFirstMessageTTS = async () => {
           let attempts = 0
-          const maxAttempts = 20  // ?�多�?�?2 �?
+          const maxAttempts = 20  // 最多等待 2 秒
           while (attempts < maxAttempts) {
             const voices = window.speechSynthesis.getVoices()
             if (voices.length > 0) {
-              console.log('??TTS voices loaded, playing first message')
+              console.log('✅ TTS voices loaded, playing first message')
               playTTS(englishText)
               return
             }
@@ -370,8 +370,8 @@ export default function ConversationChatPage() {
             attempts++
           }
 
-          // 超�?仍播?��?使用默�??�音
-          console.warn('?��? TTS voices not ready after 2s, playing with default voice')
+          // 超時仍播放，使用默認聲音
+          console.warn('⚠️ TTS voices not ready after 2s, playing with default voice')
           playTTS(englishText)
         }
 
@@ -446,10 +446,10 @@ export default function ConversationChatPage() {
     return fallback
   }
 
-  // ?�� 純英??TTS（英?�學習系統�?
+  // 🎤 純英文 TTS（英文學習系統）
   const playTTS = (text: string) => {
     if (!text || !('speechSynthesis' in window)) {
-      console.log('?��? TTS unavailable')
+      console.log('⚠️ TTS unavailable')
       return
     }
 
@@ -462,12 +462,12 @@ export default function ConversationChatPage() {
 
     if (!cleanText) return
 
-    // 永�?使用?��?語音
+    // 永遠使用英文語音
     const englishVoiceConfig = getInterviewerEnglishVoice(currentInterviewer)
 
-    console.log(`?�� [Conversation TTS] Interviewer: ${currentInterviewer}`)
+    console.log(`🎤 [Conversation TTS] Interviewer: ${currentInterviewer}`)
     console.log(`  English Voice: ${englishVoiceConfig.preferredVoiceName}`)
-    console.log(`?? Text to speak:`, cleanText)
+    console.log(`📝 Text to speak:`, cleanText)
 
     const voices = window.speechSynthesis.getVoices()
     const englishVoice = findBestEnglishVoice(voices, englishVoiceConfig)
@@ -481,7 +481,7 @@ export default function ConversationChatPage() {
     utterance.pitch = englishVoiceConfig.pitch
     utterance.volume = 1.0
 
-    console.log(`?? [Conversation TTS] Using voice: ${englishVoice?.name || 'default'}`)
+    console.log(`🔊 [Conversation TTS] Using voice: ${englishVoice?.name || 'default'}`)
     window.speechSynthesis.speak(utterance)
   }
 
@@ -584,7 +584,7 @@ export default function ConversationChatPage() {
       }, 500)
     } catch (error) {
       console.error('Failed to send message:', error)
-      setError('?��??��?訊息?�發?�錯誤�?請�?試�?)
+      setError('處理您的訊息時發生錯誤，請重試。')
     } finally {
       setIsLoading(false)
     }
