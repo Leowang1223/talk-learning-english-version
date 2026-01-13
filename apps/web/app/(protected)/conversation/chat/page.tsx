@@ -414,7 +414,7 @@ export default function ConversationChatPage() {
       const partial = voices.find(v => {
         const nameLower = v.name.toLowerCase()
         return v.lang.startsWith('en') &&
-          parts.some(p => p.length > 3 && nameLower.includes(p))
+          parts.some((p: string) => p.length > 3 && nameLower.includes(p))
       })
       if (partial) {
         console.log(`✅ Found preferred voice (partial): ${partial.name}`)
@@ -430,7 +430,7 @@ export default function ConversationChatPage() {
 
     const pitched = voices.find(v =>
       v.lang.startsWith('en') &&
-      genderNames.some(name => v.name.toLowerCase().includes(name))
+      genderNames.some((name: string) => v.name.toLowerCase().includes(name))
     )
     if (pitched) {
       console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)

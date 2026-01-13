@@ -24,7 +24,7 @@ import { AppButton } from '@/components/ui/AppButton'
 import { BookmarkPlus, Volume2 } from 'lucide-react'
 
 // 講師選擇器
-import { InterviewerSelector, getInterviewerImagePath, getInterviewerVoice, DEFAULT_INTERVIEWER } from '../components/InterviewerSelector'
+import { InterviewerSelector, getInterviewerImagePath, getInterviewerVoice, getInterviewerEnglishVoice, DEFAULT_INTERVIEWER } from '../components/InterviewerSelector'
 
 // 🔧 字串相似度計算工具（Levenshtein Distance）
 function normalizeText(text: string): string {
@@ -898,7 +898,7 @@ export default function LessonPage() {
       const partial = voices.find(v => {
         const nameLower = v.name.toLowerCase()
         return v.lang.startsWith('en') &&
-          parts.some(p => p.length > 3 && nameLower.includes(p))
+          parts.some((p: string) => p.length > 3 && nameLower.includes(p))
       })
       if (partial) {
         console.log(`✅ Found preferred voice (partial): ${partial.name}`)
@@ -914,7 +914,7 @@ export default function LessonPage() {
 
     const pitched = voices.find(v =>
       v.lang.startsWith('en') &&
-      genderNames.some(name => v.name.toLowerCase().includes(name))
+      genderNames.some((name: string) => v.name.toLowerCase().includes(name))
     )
     if (pitched) {
       console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)
