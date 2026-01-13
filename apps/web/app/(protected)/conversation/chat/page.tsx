@@ -152,15 +152,15 @@ export default function ConversationChatPage() {
   // Preload TTS voices on page mount
   useEffect(() => {
     if ('speechSynthesis' in window) {
-      console.log('?�� Initializing TTS voice preload...')
+      console.log('🎤 Initializing TTS voice preload...')
 
       const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices()
         if (voices.length > 0) {
-          console.log('??TTS voices loaded:', voices.length, 'voices available')
+          console.log('✅ TTS voices loaded:', voices.length, 'voices available')
           // Log Chinese voices for debugging
           const chineseVoices = voices.filter(v => v.lang.includes('zh'))
-          console.log('?��?�� Chinese voices:', chineseVoices.map(v => v.name).join(', '))
+          console.log('🇨🇳 Chinese voices:', chineseVoices.map(v => v.name).join(', '))
         }
       }
 
@@ -327,7 +327,7 @@ export default function ConversationChatPage() {
         // Auto-set interviewer if AI role has interviewerId
         if (aiRole?.interviewerId) {
           setCurrentInterviewer(aiRole.interviewerId)
-          console.log(`?�� Auto-selected interviewer: ${aiRole.interviewerId} for role ${aiRole.id}`)
+          console.log(`🎭 Auto-selected interviewer: ${aiRole.interviewerId} for role ${aiRole.id}`)
         }
 
         setScenarioInfo({
@@ -379,7 +379,7 @@ export default function ConversationChatPage() {
       } else {
         // User speaks first - no initial message
         setMessages([])
-        console.log('?�� User should speak first')
+        console.log('👤 User should speak first')
       }
 
       // Set initial suggestions
@@ -388,26 +388,27 @@ export default function ConversationChatPage() {
       }
     } catch (error) {
       console.error('Failed to start conversation:', error)
-      setError('?��?對話失�?，�??�試??)
+      setError('啟動對話失敗，請重試。')
     } finally {
       setIsLoading(false)
     }
   }
 
-  // ?�� 語音?��??�數：智?�選?��?佳英?��???  const findBestEnglishVoice = (
+  // 🎤 語音匹配函數：智能選擇最佳英文語音
+  const findBestEnglishVoice = (
     voices: SpeechSynthesisVoice[],
     englishVoiceConfig: any
   ): SpeechSynthesisVoice | undefined => {
-    // 1. 精確?��?首選語音?�稱
+    // 1. 精確匹配首選語音名稱
     if (englishVoiceConfig.preferredVoiceName) {
       const exact = voices.find(v => v.name === englishVoiceConfig.preferredVoiceName)
       if (exact) {
-        console.log(`??Found preferred voice (exact): ${exact.name}`)
+        console.log(`✅ Found preferred voice (exact): ${exact.name}`)
         return exact
       }
     }
 
-    // 2. ?��??��?首選語音?�稱
+    // 2. 部分匹配首選語音名稱
     if (englishVoiceConfig.preferredVoiceName) {
       const parts = englishVoiceConfig.preferredVoiceName.toLowerCase().split(' ')
       const partial = voices.find(v => {
@@ -416,12 +417,12 @@ export default function ConversationChatPage() {
           parts.some(p => p.length > 3 && nameLower.includes(p))
       })
       if (partial) {
-        console.log(`??Found preferred voice (partial): ${partial.name}`)
+        console.log(`✅ Found preferred voice (partial): ${partial.name}`)
         return partial
       }
     }
 
-    // 3. ?�於?�調?��?語音?�稱（�?依賴 male/female ?�鍵字�?
+    // 3. 基於音調匹配語音名稱（不依賴 male/female 關鍵字）
     const isHighPitch = englishVoiceConfig.pitch >= 1.1
     const genderNames = isHighPitch
       ? ['sara', 'jenny', 'emma', 'michelle', 'aria', 'female', 'woman']
@@ -432,16 +433,16 @@ export default function ConversationChatPage() {
       genderNames.some(name => v.name.toLowerCase().includes(name))
     )
     if (pitched) {
-      console.log(`??Found voice by pitch/gender: ${pitched.name}`)
+      console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)
       return pitched
     }
 
-    // 4. 任�??��?語音（�??��?
+    // 4. 任何英文語音（備用）
     const fallback = voices.find(v => v.lang.startsWith('en'))
     if (fallback) {
-      console.log(`?��? Using fallback English voice: ${fallback.name}`)
+      console.log(`⚠️ Using fallback English voice: ${fallback.name}`)
     } else {
-      console.error(`??No English voice found!`)
+      console.error(`❌ No English voice found!`)
     }
     return fallback
   }
@@ -510,7 +511,7 @@ export default function ConversationChatPage() {
       setRecordingError(null)
     } catch (error) {
       console.error('Failed to start recording:', error)
-      setRecordingError('?��?存�?麥�?�?)
+      setRecordingError('無法存取麥克風')
     }
   }
 
@@ -600,7 +601,7 @@ export default function ConversationChatPage() {
     try {
       // Check if session exists
       if (!sessionId) {
-        throw new Error('?��??��??��?對話?�段')
+        throw new Error('無效的對話階段')
       }
 
       const data = await fetchJson<{
@@ -639,9 +640,9 @@ export default function ConversationChatPage() {
     } catch (error: any) {
       console.error('Failed to end conversation:', error)
       if (error.message.includes('session') || error.message.includes('SESSION')) {
-        setError('對話已�??��??��?對話資�?已遺失。�??��??��?對話??)
+        setError('對話已結束或對話資料已遺失。請開始新的對話。')
       } else {
-        setError('結�?對話失�?�? + error.message)
+        setError('結束對話失敗：' + error.message)
       }
     } finally {
       setIsLoading(false)
@@ -741,7 +742,7 @@ export default function ConversationChatPage() {
               />
               <div className="absolute inset-0 bg-black/0 transition-all group-hover:bg-black/30 flex items-center justify-center">
                 <span className="text-sm font-medium text-white opacity-0 group-hover:opacity-100">
-                  ?��??�師
+                  切換講師
                 </span>
               </div>
             </button>
@@ -790,7 +791,7 @@ export default function ConversationChatPage() {
             </button>
 
             <p className="mt-3 text-center text-sm text-white drop-shadow-lg">
-              {isRecording ? '?��?以發??..' : '?��?說話'}
+              {isRecording ? '可以發言..' : '點擊說話'}
             </p>
 
             {recordingError && (
@@ -839,7 +840,8 @@ export default function ConversationChatPage() {
       {settings.topicMode === 'scenario' && (
         <CompletionPrompt
           isAllCompleted={allCheckpointsCompleted}
-          onContinue={() => setAllCheckpointsCompleted(false)} // ?��??�示，繼續�?�?          onEnd={handleEndConversation}
+          onContinue={() => setAllCheckpointsCompleted(false)} // 隱藏提示，繼續練習
+          onEnd={handleEndConversation}
         />
       )}
     </div>
