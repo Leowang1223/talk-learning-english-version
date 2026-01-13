@@ -142,8 +142,8 @@ export default function FlashcardsPage() {
     const source = card.custom ? 'custom' : 'practice-saved'
     return {
       id: `local-${card.id}`,
-      front: card.prompt || '',  // 正面：英文（要學的內容）
-      back: card.expectedAnswer || '',  // 背面：中文翻譯
+      front: card.expectedAnswer || '',  // 正面：英文（要學的內容）- expectedAnswer 存英文
+      back: card.prompt || '',  // 背面：中文翻譯 - prompt 存中文
       pinyin: card.pinyin,
       createdAt,
       deckName: card.deckName || (card.custom ? 'Custom Card' : 'Practice Saved'),
@@ -203,8 +203,24 @@ export default function FlashcardsPage() {
   }
 
   function handlePlayAudio(card: DeckCard) {
-    if (!card.front) return
-    TTSService.playText(card.front)
+    if (!card.front || !window.speechSynthesis) return
+
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(card.front)
+
+    // 選擇英文語音
+    const voices = window.speechSynthesis.getVoices()
+    const englishVoice = voices.find(v => v.lang.startsWith('en'))
+    if (englishVoice) {
+      utterance.voice = englishVoice
+    }
+
+    utterance.lang = 'en-US'
+    utterance.rate = 0.9
+    utterance.pitch = 1.0
+
+    console.log(`🔊 [Flashcards TTS] Playing English:`, card.front)
+    window.speechSynthesis.speak(utterance)
   }
 
   function handleFormSubmit() {

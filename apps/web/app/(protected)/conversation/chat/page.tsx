@@ -364,7 +364,7 @@ export default function ConversationChatPage() {
             const voices = window.speechSynthesis.getVoices()
             if (voices.length > 0) {
               console.log('✅ TTS voices loaded, playing first message')
-              playTTS(englishText, 'english')
+              playTTS(englishText)
               return
             }
             await new Promise(r => setTimeout(r, 100))
@@ -373,7 +373,7 @@ export default function ConversationChatPage() {
 
           // 超時仍播放，使用默認聲音
           console.warn('⚠️ TTS voices not ready after 2s, playing with default voice')
-          playTTS(englishText, 'english')
+          playTTS(englishText)
         }
 
         playFirstMessageTTS()
@@ -395,110 +395,95 @@ export default function ConversationChatPage() {
     }
   }
 
-  // TTS playback with bilingual support (English for AI, Chinese for hints)
-  const playTTS = (text: string, language: 'english' | 'chinese' = 'english') => {
+  // 🎤 語音匹配函數：智能選擇最佳英文語音
+  const findBestEnglishVoice = (
+    voices: SpeechSynthesisVoice[],
+    englishVoiceConfig: any
+  ): SpeechSynthesisVoice | undefined => {
+    // 1. 精確匹配首選語音名稱
+    if (englishVoiceConfig.preferredVoiceName) {
+      const exact = voices.find(v => v.name === englishVoiceConfig.preferredVoiceName)
+      if (exact) {
+        console.log(`✅ Found preferred voice (exact): ${exact.name}`)
+        return exact
+      }
+    }
+
+    // 2. 部分匹配首選語音名稱
+    if (englishVoiceConfig.preferredVoiceName) {
+      const parts = englishVoiceConfig.preferredVoiceName.toLowerCase().split(' ')
+      const partial = voices.find(v => {
+        const nameLower = v.name.toLowerCase()
+        return v.lang.startsWith('en') &&
+          parts.some(p => p.length > 3 && nameLower.includes(p))
+      })
+      if (partial) {
+        console.log(`✅ Found preferred voice (partial): ${partial.name}`)
+        return partial
+      }
+    }
+
+    // 3. 基於音調匹配語音名稱（不依賴 male/female 關鍵字）
+    const isHighPitch = englishVoiceConfig.pitch >= 1.1
+    const genderNames = isHighPitch
+      ? ['sara', 'jenny', 'emma', 'michelle', 'aria', 'female', 'woman']
+      : ['david', 'guy', 'eric', 'jason', 'male', 'man']
+
+    const pitched = voices.find(v =>
+      v.lang.startsWith('en') &&
+      genderNames.some(name => v.name.toLowerCase().includes(name))
+    )
+    if (pitched) {
+      console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)
+      return pitched
+    }
+
+    // 4. 任何英文語音（備用）
+    const fallback = voices.find(v => v.lang.startsWith('en'))
+    if (fallback) {
+      console.log(`⚠️ Using fallback English voice: ${fallback.name}`)
+    } else {
+      console.error(`❌ No English voice found!`)
+    }
+    return fallback
+  }
+
+  // 🎤 純英文 TTS（英文學習系統）
+  const playTTS = (text: string) => {
     if (!text || !('speechSynthesis' in window)) {
-      console.log('⚠️ TTS unavailable: text or speechSynthesis missing')
+      console.log('⚠️ TTS unavailable')
       return
     }
 
-    // Cancel any ongoing speech
     window.speechSynthesis.cancel()
 
-    // Clean the text
-    let cleanText = text
-    if (language === 'chinese') {
-      cleanText = removePinyin(text)
-      cleanText = convertSymbolsToWords(cleanText)
-      cleanText = removePunctuation(cleanText)
-    } else {
-      // For English, just basic cleanup
-      cleanText = text.replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ').trim()
-    }
+    const cleanText = text
+      .replace(/[\n\r]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
 
-    if (!cleanText.trim()) {
-      console.log('⚠️ TTS skipped: no text after cleaning')
-      return
-    }
+    if (!cleanText) return
 
-    // Get appropriate voice configuration
-    const voiceConfig = language === 'english'
-      ? getInterviewerEnglishVoice(currentInterviewer)
-      : getInterviewerVoice(currentInterviewer)
+    // 永遠使用英文語音
+    const englishVoiceConfig = getInterviewerEnglishVoice(currentInterviewer)
 
-    console.log(`🎤 Interviewer: ${currentInterviewer}, Language: ${language}, Config:`, voiceConfig)
+    console.log(`🎤 [Conversation TTS] Interviewer: ${currentInterviewer}`)
+    console.log(`  English Voice: ${englishVoiceConfig.preferredVoiceName}`)
+    console.log(`📝 Text to speak:`, cleanText)
 
     const voices = window.speechSynthesis.getVoices()
-    console.log(`📢 Available voices (${voices.length}):`, voices.map(v => `${v.name} (${v.lang})`).slice(0, 10))
+    const englishVoice = findBestEnglishVoice(voices, englishVoiceConfig)
 
-    if (voices.length === 0) {
-      console.warn('⚠️ TTS voices not loaded yet, speech may use default voice')
-    }
-
-    // Try to find appropriate voice
-    let selectedVoice: SpeechSynthesisVoice | undefined
-
-    // First try: preferred voice name (exact match)
-    if (voiceConfig.preferredVoiceName) {
-      const preferredName = voiceConfig.preferredVoiceName
-      selectedVoice = voices.find(voice => voice.name === preferredName)
-      if (selectedVoice) {
-        console.log(`✅ Found preferred voice (exact): ${selectedVoice.name}`)
-      }
-    }
-
-    // Second try: preferred voice name (partial match)
-    if (!selectedVoice && voiceConfig.preferredVoiceName) {
-      const preferredParts = voiceConfig.preferredVoiceName.toLowerCase().split(' ')
-      selectedVoice = voices.find(voice => {
-        const voiceNameLower = voice.name.toLowerCase()
-        return preferredParts.some(part => part.length > 3 && voiceNameLower.includes(part))
-      })
-      if (selectedVoice) {
-        console.log(`✅ Found preferred voice (partial): ${selectedVoice.name}`)
-      }
-    }
-
-    // Third try: match by language and gender
-    if (!selectedVoice) {
-      const targetLang = voiceConfig.lang.split('-')[0]
-      selectedVoice = voices.find(voice =>
-        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase()) &&
-        voice.name.toLowerCase().includes(voiceConfig.gender)
-      )
-      if (selectedVoice) {
-        console.log(`✅ Found voice by lang+gender: ${selectedVoice.name}`)
-      }
-    }
-
-    // Fourth try: any voice with matching language
-    if (!selectedVoice) {
-      const targetLang = voiceConfig.lang.split('-')[0]
-      selectedVoice = voices.find(voice =>
-        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
-      )
-      if (selectedVoice) {
-        console.log(`✅ Found voice by lang: ${selectedVoice.name}`)
-      }
-    }
-
-    // Create and configure utterance
     const utterance = new SpeechSynthesisUtterance(cleanText)
-
-    if (selectedVoice) {
-      utterance.voice = selectedVoice
-      console.log(`🔊 Using ${language} voice:`, selectedVoice.name, `(${selectedVoice.lang})`)
-    } else {
-      console.log(`⚠️ Using default ${language} voice (no matching voice found)`)
+    if (englishVoice) {
+      utterance.voice = englishVoice
     }
-
-    utterance.lang = voiceConfig.lang
-    utterance.rate = voiceConfig.rate
-    utterance.pitch = voiceConfig.pitch
+    utterance.lang = 'en-US'
+    utterance.rate = englishVoiceConfig.rate
+    utterance.pitch = englishVoiceConfig.pitch
     utterance.volume = 1.0
 
-    console.log(`🔊 Playing ${language} TTS:`, cleanText.substring(0, 50) + '...')
-    console.log(`📝 Full text to speak:`, cleanText)
+    console.log(`🔊 [Conversation TTS] Using voice: ${englishVoice?.name || 'default'}`)
     window.speechSynthesis.speak(utterance)
   }
 
@@ -595,8 +580,8 @@ export default function ConversationChatPage() {
           setSuggestions(data.suggestions)
         }
 
-        // Play TTS for instructor response (English for conversation practice)
-        playTTS(data.instructorReply.english, 'english')
+        // Play TTS for instructor response (pure English for learning)
+        playTTS(data.instructorReply.english)
       }, 500)
     } catch (error) {
       console.error('Failed to send message:', error)

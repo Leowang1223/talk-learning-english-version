@@ -878,151 +878,97 @@ export default function LessonPage() {
     }
   }, [currentInterviewer]) // 只監聽講師切換
 
-  // 🔧 修復：分離中文和英文，使用不同的 TTS，保持順序
+  // 🎤 語音匹配函數：智能選擇最佳英文語音
+  const findBestEnglishVoice = (
+    voices: SpeechSynthesisVoice[],
+    englishVoiceConfig: any
+  ): SpeechSynthesisVoice | undefined => {
+    // 1. 精確匹配首選語音名稱
+    if (englishVoiceConfig.preferredVoiceName) {
+      const exact = voices.find(v => v.name === englishVoiceConfig.preferredVoiceName)
+      if (exact) {
+        console.log(`✅ Found preferred voice (exact): ${exact.name}`)
+        return exact
+      }
+    }
+
+    // 2. 部分匹配首選語音名稱
+    if (englishVoiceConfig.preferredVoiceName) {
+      const parts = englishVoiceConfig.preferredVoiceName.toLowerCase().split(' ')
+      const partial = voices.find(v => {
+        const nameLower = v.name.toLowerCase()
+        return v.lang.startsWith('en') &&
+          parts.some(p => p.length > 3 && nameLower.includes(p))
+      })
+      if (partial) {
+        console.log(`✅ Found preferred voice (partial): ${partial.name}`)
+        return partial
+      }
+    }
+
+    // 3. 基於音調匹配語音名稱（不依賴 male/female 關鍵字）
+    const isHighPitch = englishVoiceConfig.pitch >= 1.1
+    const genderNames = isHighPitch
+      ? ['sara', 'jenny', 'emma', 'michelle', 'aria', 'female', 'woman']
+      : ['david', 'guy', 'eric', 'jason', 'male', 'man']
+
+    const pitched = voices.find(v =>
+      v.lang.startsWith('en') &&
+      genderNames.some(name => v.name.toLowerCase().includes(name))
+    )
+    if (pitched) {
+      console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)
+      return pitched
+    }
+
+    // 4. 任何英文語音（備用）
+    const fallback = voices.find(v => v.lang.startsWith('en'))
+    if (fallback) {
+      console.log(`⚠️ Using fallback English voice: ${fallback.name}`)
+    } else {
+      console.error(`❌ No English voice found!`)
+    }
+    return fallback
+  }
+
+  // 🎤 純英文 TTS（英文學習系統）
   const playTTS = (text: string) => {
     if (!('speechSynthesis' in window)) return
 
     window.speechSynthesis.cancel()
 
-    // 處理文本：移除括號 → 轉換符號 → 移除標點
-    let cleanText = removeParentheses(text)
-    cleanText = convertSymbolsToWords(cleanText)
-    cleanText = removePunctuation(cleanText)
+    // 簡單清理文本
+    const cleanText = text
+      .replace(/[\n\r]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
 
-    // 🔧 按順序分離文本段落（保持原始順序）
-    interface TextSegment {
-      text: string
-      isChinese: boolean
-    }
+    if (!cleanText) return
 
-    const segments: TextSegment[] = []
+    // 只獲取英文語音配置
+    const englishVoiceConfig = getInterviewerEnglishVoice(currentInterviewer)
 
-    // 使用正則匹配中英文，並保持順序
-    const pattern = /([a-zA-Z\s.,!?'"-]+)|([^a-zA-Z\s.,!?'"-]+)/g
-    let match
+    console.log(`🎤 [Lesson TTS] Interviewer: ${currentInterviewer}`)
+    console.log(`  English Voice: ${englishVoiceConfig.preferredVoiceName}`)
+    console.log(`  Pitch: ${englishVoiceConfig.pitch}, Rate: ${englishVoiceConfig.rate}`)
 
-    while ((match = pattern.exec(cleanText)) !== null) {
-      const text = match[0].trim()
-      if (!text) continue
-
-      const isChinese = !match[1] // 如果不是英文組，就是中文
-      segments.push({ text, isChinese })
-    }
-
-    // 🎤 獲取當前講師的語音配置
-    const voiceConfig = getInterviewerVoice(currentInterviewer)
-
-    console.log(`🎤 [Lesson TTS] Interviewer: ${currentInterviewer}, Gender: ${voiceConfig.gender}, Config:`, voiceConfig)
-
-    // 獲取語音引擎
     const voices = window.speechSynthesis.getVoices()
-    console.log(`📢 [Lesson TTS] Available voices (${voices.length}):`, voices.map(v => `${v.name} (${v.lang})`).slice(0, 10))
 
-    // 選擇英文語音
-    const englishVoice = voices.find(voice =>
-      voice.lang === 'en-US' &&
-      (voice.name.includes('Google') ||
-       voice.name.includes('Microsoft') ||
-       voice.name.includes('Natural'))
-    ) || voices.find(voice => voice.lang.startsWith('en'))
+    // 使用語音匹配邏輯
+    const englishVoice = findBestEnglishVoice(voices, englishVoiceConfig)
 
-    // 🎤 選擇中文語音：優先使用講師的指定語音
-    let chineseVoice: SpeechSynthesisVoice | undefined
-
-    // 1. 嘗試使用講師的首選語音名稱（精確匹配）
-    if (voiceConfig.preferredVoiceName) {
-      const preferredName = voiceConfig.preferredVoiceName
-      chineseVoice = voices.find(voice => voice.name === preferredName)
-      if (chineseVoice) {
-        console.log(`✅ [Lesson TTS] Found preferred voice (exact): ${chineseVoice.name}`)
-      }
+    // 創建單個 utterance（不分段）
+    const utterance = new SpeechSynthesisUtterance(cleanText)
+    if (englishVoice) {
+      utterance.voice = englishVoice
     }
+    utterance.lang = 'en-US'
+    utterance.rate = englishVoiceConfig.rate
+    utterance.pitch = englishVoiceConfig.pitch
+    utterance.volume = 1.0
 
-    // 2. 嘗試使用講師的首選語音名稱（部分匹配）
-    if (!chineseVoice && voiceConfig.preferredVoiceName) {
-      const preferredParts = voiceConfig.preferredVoiceName.toLowerCase().split(' ')
-      chineseVoice = voices.find(voice => {
-        const voiceNameLower = voice.name.toLowerCase()
-        return preferredParts.some(part => part.length > 3 && voiceNameLower.includes(part))
-      })
-      if (chineseVoice) {
-        console.log(`✅ [Lesson TTS] Found preferred voice (partial): ${chineseVoice.name}`)
-      }
-    }
-
-    // 3. 根據語言和性別選擇
-    if (!chineseVoice) {
-      const targetLang = voiceConfig.lang.split('-')[0]
-      const genderKeyword = voiceConfig.gender.toLowerCase()
-
-      chineseVoice = voices.find(voice => {
-        const langMatch = voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
-        const nameMatch = voice.name.toLowerCase().includes(genderKeyword)
-        return langMatch && nameMatch
-      })
-
-      if (chineseVoice) {
-        console.log(`✅ [Lesson TTS] Found voice by lang+gender: ${chineseVoice.name}`)
-      }
-    }
-
-    // 4. 備用方案：按語言選擇
-    if (!chineseVoice) {
-      const targetLang = voiceConfig.lang.split('-')[0]
-      chineseVoice = voices.find(voice =>
-        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
-      )
-      if (chineseVoice) {
-        console.log(`✅ [Lesson TTS] Found voice by lang: ${chineseVoice.name}`)
-      }
-    }
-
-    // 5. 最終備用：任何中文語音
-    if (!chineseVoice) {
-      chineseVoice = voices.find(voice => voice.lang.includes('zh'))
-      if (chineseVoice) {
-        console.log(`⚠️ [Lesson TTS] Using fallback Chinese voice: ${chineseVoice.name}`)
-      }
-    }
-
-    if (!chineseVoice) {
-      console.error('❌ [Lesson TTS] No Chinese voice found!')
-    } else {
-      console.log(`🔊 [Lesson TTS] Final Chinese voice: ${chineseVoice.name} (${chineseVoice.lang})`)
-    }
-
-    // 🔧 按順序播放每個段落，使用正確的語音引擎
-    let currentUtterance: SpeechSynthesisUtterance | null = null
-
-    segments.forEach((segment, index) => {
-      const utterance = new SpeechSynthesisUtterance(segment.text)
-
-      if (segment.isChinese) {
-        // 🎤 中文段落：使用講師的語音配置
-        if (chineseVoice) utterance.voice = chineseVoice
-        utterance.lang = voiceConfig.lang
-        utterance.rate = voiceConfig.rate
-        utterance.pitch = voiceConfig.pitch
-      } else {
-        // 英文段落
-        if (englishVoice) utterance.voice = englishVoice
-        utterance.lang = 'en-US'
-        utterance.rate = 0.9
-        utterance.pitch = 1.0
-      }
-
-      utterance.volume = 1.0
-
-      // 🔧 使用 onend 事件鏈接下一個段落，確保順序播放
-      if (index < segments.length - 1) {
-        utterance.onend = () => {
-          // 播放完成後自動播放下一個
-        }
-      }
-
-      window.speechSynthesis.speak(utterance)
-      currentUtterance = utterance
-    })
+    console.log(`🔊 [Lesson TTS] Playing with: ${englishVoice?.name || 'default'}`)
+    window.speechSynthesis.speak(utterance)
   }  // 確保語音列表已載入
   useEffect(() => {
     if ('speechSynthesis' in window) {
