@@ -27,7 +27,7 @@ function convertSymbolsToWords(text: string): string {
     '@': 'at',
     '#': 'hashtag number',
     '$': 'dollar',
-    '€': 'euro',
+    '??: 'euro',
     '£': 'pound',
     '¥': 'yen yuan',
     '+': 'plus',
@@ -35,12 +35,12 @@ function convertSymbolsToWords(text: string): string {
     '<': 'less than',
     '>': 'greater than',
   }
-  return text.replace(/[%&@#$€£¥+=<>]/g, (match) => ` ${symbolMap[match] || match} `)
+  return text.replace(/[%&@#$?��??=<>]/g, (match) => ` ${symbolMap[match] || match} `)
 }
 
 function removePunctuation(text: string): string {
   if (!text) return ''
-  return text.replace(/[，。！？；：、""''《》【】（）]/g, ' ').replace(/\s+/g, ' ').trim()
+  return text.replace(/[，。�?？�?：�?"''?�》【】�?）]/g, ' ').replace(/\s+/g, ' ').trim()
 }
 
 interface ConversationSettings {
@@ -152,15 +152,15 @@ export default function ConversationChatPage() {
   // Preload TTS voices on page mount
   useEffect(() => {
     if ('speechSynthesis' in window) {
-      console.log('🎤 Initializing TTS voice preload...')
+      console.log('?�� Initializing TTS voice preload...')
 
       const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices()
         if (voices.length > 0) {
-          console.log('✅ TTS voices loaded:', voices.length, 'voices available')
+          console.log('??TTS voices loaded:', voices.length, 'voices available')
           // Log Chinese voices for debugging
           const chineseVoices = voices.filter(v => v.lang.includes('zh'))
-          console.log('🇨🇳 Chinese voices:', chineseVoices.map(v => v.name).join(', '))
+          console.log('?��?�� Chinese voices:', chineseVoices.map(v => v.name).join(', '))
         }
       }
 
@@ -263,7 +263,7 @@ export default function ConversationChatPage() {
       } else if (loadedSettings.topicMode === 'all') {
         // Fetch all available chapters from API
         topics = await getAllAvailableChapterIds()
-        console.log('📚 All available chapters:', topics)
+        console.log('?? All available chapters:', topics)
       }
 
       const requestBody: any = {
@@ -280,17 +280,17 @@ export default function ConversationChatPage() {
 
       // Add review mode parameters
       if (loadedSettings.topicMode === 'all') {
-        // 從 localStorage 讀取已完成課程清單
+        // �?localStorage 讀?�已完�?課�?清單
         const lessonHistory = JSON.parse(localStorage.getItem('lessonHistory') || '[]')
         const completedLessons = lessonHistory.map((h: any) => h.lessonId)
         requestBody.completedLessons = completedLessons
-        console.log('📚 Review mode (all): Sending', completedLessons.length, 'completed lessons')
+        console.log('?? Review mode (all): Sending', completedLessons.length, 'completed lessons')
       } else if (loadedSettings.topicMode === 'selected') {
-        // 從 localStorage 讀取已完成課程清單
+        // �?localStorage 讀?�已完�?課�?清單
         const lessonHistory = JSON.parse(localStorage.getItem('lessonHistory') || '[]')
         const allCompletedLessons = lessonHistory.map((h: any) => h.lessonId)
 
-        // 過濾出屬於選定章節的已完成課程
+        // ?�濾?�屬?�選定�?節?�已完�?課�?
         const selectedChaptersSet = new Set(loadedSettings.selectedTopics)
         const completedLessonsInSelectedChapters = allCompletedLessons.filter((lessonId: string) => {
           const chapterId = lessonId.split('-')[0]
@@ -299,8 +299,8 @@ export default function ConversationChatPage() {
 
         requestBody.selectedChapters = loadedSettings.selectedTopics || []
         requestBody.completedLessons = completedLessonsInSelectedChapters
-        console.log('📚 Review mode (selected): Sending chapters', requestBody.selectedChapters)
-        console.log('📚 Review mode (selected): Found', completedLessonsInSelectedChapters.length, 'completed lessons in these chapters')
+        console.log('?? Review mode (selected): Sending chapters', requestBody.selectedChapters)
+        console.log('?? Review mode (selected): Found', completedLessonsInSelectedChapters.length, 'completed lessons in these chapters')
       }
 
       const data = await fetchJson<{
@@ -327,7 +327,7 @@ export default function ConversationChatPage() {
         // Auto-set interviewer if AI role has interviewerId
         if (aiRole?.interviewerId) {
           setCurrentInterviewer(aiRole.interviewerId)
-          console.log(`🎭 Auto-selected interviewer: ${aiRole.interviewerId} for role ${aiRole.id}`)
+          console.log(`?�� Auto-selected interviewer: ${aiRole.interviewerId} for role ${aiRole.id}`)
         }
 
         setScenarioInfo({
@@ -354,16 +354,15 @@ export default function ConversationChatPage() {
         setMessages([firstMessage])
 
         // Play TTS with dynamic voice detection (English for conversation practice)
-        console.log('🎬 Preparing to play first message TTS...')
-        const englishText = firstMessage.english
+        console.log('?�� Preparing to play first message TTS...')
+        const englishText: string = firstMessage.english ?? ''
         const playFirstMessageTTS = async () => {
           let attempts = 0
-          const maxAttempts = 20  // 最多等待 2 秒
-
+          const maxAttempts = 20  // ?�多�?�?2 �?
           while (attempts < maxAttempts) {
             const voices = window.speechSynthesis.getVoices()
             if (voices.length > 0) {
-              console.log('✅ TTS voices loaded, playing first message')
+              console.log('??TTS voices loaded, playing first message')
               playTTS(englishText)
               return
             }
@@ -371,8 +370,8 @@ export default function ConversationChatPage() {
             attempts++
           }
 
-          // 超時仍播放，使用默認聲音
-          console.warn('⚠️ TTS voices not ready after 2s, playing with default voice')
+          // 超�?仍播?��?使用默�??�音
+          console.warn('?��? TTS voices not ready after 2s, playing with default voice')
           playTTS(englishText)
         }
 
@@ -380,7 +379,7 @@ export default function ConversationChatPage() {
       } else {
         // User speaks first - no initial message
         setMessages([])
-        console.log('👤 User should speak first')
+        console.log('?�� User should speak first')
       }
 
       // Set initial suggestions
@@ -389,27 +388,26 @@ export default function ConversationChatPage() {
       }
     } catch (error) {
       console.error('Failed to start conversation:', error)
-      setError('啟動對話失敗，請重試。')
+      setError('?��?對話失�?，�??�試??)
     } finally {
       setIsLoading(false)
     }
   }
 
-  // 🎤 語音匹配函數：智能選擇最佳英文語音
-  const findBestEnglishVoice = (
+  // ?�� 語音?��??�數：智?�選?��?佳英?��???  const findBestEnglishVoice = (
     voices: SpeechSynthesisVoice[],
     englishVoiceConfig: any
   ): SpeechSynthesisVoice | undefined => {
-    // 1. 精確匹配首選語音名稱
+    // 1. 精確?��?首選語音?�稱
     if (englishVoiceConfig.preferredVoiceName) {
       const exact = voices.find(v => v.name === englishVoiceConfig.preferredVoiceName)
       if (exact) {
-        console.log(`✅ Found preferred voice (exact): ${exact.name}`)
+        console.log(`??Found preferred voice (exact): ${exact.name}`)
         return exact
       }
     }
 
-    // 2. 部分匹配首選語音名稱
+    // 2. ?��??��?首選語音?�稱
     if (englishVoiceConfig.preferredVoiceName) {
       const parts = englishVoiceConfig.preferredVoiceName.toLowerCase().split(' ')
       const partial = voices.find(v => {
@@ -418,12 +416,12 @@ export default function ConversationChatPage() {
           parts.some(p => p.length > 3 && nameLower.includes(p))
       })
       if (partial) {
-        console.log(`✅ Found preferred voice (partial): ${partial.name}`)
+        console.log(`??Found preferred voice (partial): ${partial.name}`)
         return partial
       }
     }
 
-    // 3. 基於音調匹配語音名稱（不依賴 male/female 關鍵字）
+    // 3. ?�於?�調?��?語音?�稱（�?依賴 male/female ?�鍵字�?
     const isHighPitch = englishVoiceConfig.pitch >= 1.1
     const genderNames = isHighPitch
       ? ['sara', 'jenny', 'emma', 'michelle', 'aria', 'female', 'woman']
@@ -434,24 +432,24 @@ export default function ConversationChatPage() {
       genderNames.some(name => v.name.toLowerCase().includes(name))
     )
     if (pitched) {
-      console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)
+      console.log(`??Found voice by pitch/gender: ${pitched.name}`)
       return pitched
     }
 
-    // 4. 任何英文語音（備用）
+    // 4. 任�??��?語音（�??��?
     const fallback = voices.find(v => v.lang.startsWith('en'))
     if (fallback) {
-      console.log(`⚠️ Using fallback English voice: ${fallback.name}`)
+      console.log(`?��? Using fallback English voice: ${fallback.name}`)
     } else {
-      console.error(`❌ No English voice found!`)
+      console.error(`??No English voice found!`)
     }
     return fallback
   }
 
-  // 🎤 純英文 TTS（英文學習系統）
+  // ?�� 純英??TTS（英?�學習系統�?
   const playTTS = (text: string) => {
     if (!text || !('speechSynthesis' in window)) {
-      console.log('⚠️ TTS unavailable')
+      console.log('?��? TTS unavailable')
       return
     }
 
@@ -464,12 +462,12 @@ export default function ConversationChatPage() {
 
     if (!cleanText) return
 
-    // 永遠使用英文語音
+    // 永�?使用?��?語音
     const englishVoiceConfig = getInterviewerEnglishVoice(currentInterviewer)
 
-    console.log(`🎤 [Conversation TTS] Interviewer: ${currentInterviewer}`)
+    console.log(`?�� [Conversation TTS] Interviewer: ${currentInterviewer}`)
     console.log(`  English Voice: ${englishVoiceConfig.preferredVoiceName}`)
-    console.log(`📝 Text to speak:`, cleanText)
+    console.log(`?? Text to speak:`, cleanText)
 
     const voices = window.speechSynthesis.getVoices()
     const englishVoice = findBestEnglishVoice(voices, englishVoiceConfig)
@@ -483,7 +481,7 @@ export default function ConversationChatPage() {
     utterance.pitch = englishVoiceConfig.pitch
     utterance.volume = 1.0
 
-    console.log(`🔊 [Conversation TTS] Using voice: ${englishVoice?.name || 'default'}`)
+    console.log(`?? [Conversation TTS] Using voice: ${englishVoice?.name || 'default'}`)
     window.speechSynthesis.speak(utterance)
   }
 
@@ -512,7 +510,7 @@ export default function ConversationChatPage() {
       setRecordingError(null)
     } catch (error) {
       console.error('Failed to start recording:', error)
-      setRecordingError('無法存取麥克風')
+      setRecordingError('?��?存�?麥�?�?)
     }
   }
 
@@ -540,7 +538,7 @@ export default function ConversationChatPage() {
       })
 
       if (!response.ok) {
-        throw new Error('發送訊息失敗')
+        throw new Error('?�送�??�失??)
       }
 
       const data = await response.json()
@@ -581,11 +579,12 @@ export default function ConversationChatPage() {
         }
 
         // Play TTS for instructor response (pure English for learning)
-        playTTS(data.instructorReply.english)
+        const instructorText: string = data.instructorReply.english ?? ''
+        playTTS(instructorText)
       }, 500)
     } catch (error) {
       console.error('Failed to send message:', error)
-      setError('處理您的訊息時發生錯誤，請重試。')
+      setError('?��??��?訊息?�發?�錯誤�?請�?試�?)
     } finally {
       setIsLoading(false)
     }
@@ -601,7 +600,7 @@ export default function ConversationChatPage() {
     try {
       // Check if session exists
       if (!sessionId) {
-        throw new Error('找不到有效的對話階段')
+        throw new Error('?��??��??��?對話?�段')
       }
 
       const data = await fetchJson<{
@@ -640,9 +639,9 @@ export default function ConversationChatPage() {
     } catch (error: any) {
       console.error('Failed to end conversation:', error)
       if (error.message.includes('session') || error.message.includes('SESSION')) {
-        setError('對話已過期，您的對話資料已遺失。請開始新的對話。')
+        setError('對話已�??��??��?對話資�?已遺失。�??��??��?對話??)
       } else {
-        setError('結束對話失敗：' + error.message)
+        setError('結�?對話失�?�? + error.message)
       }
     } finally {
       setIsLoading(false)
@@ -686,7 +685,7 @@ export default function ConversationChatPage() {
             className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
             <PhoneOff className="h-4 w-4" />
-            <span>結束對話</span>
+            <span>結�?對話</span>
           </button>
         </div>
       </div>
@@ -735,14 +734,14 @@ export default function ConversationChatPage() {
             >
               <Image
                 src={getInterviewerImagePath(currentInterviewer)}
-                alt="AI 教師"
+                alt="AI ?�師"
                 fill
                 className="object-cover"
                 priority
               />
               <div className="absolute inset-0 bg-black/0 transition-all group-hover:bg-black/30 flex items-center justify-center">
                 <span className="text-sm font-medium text-white opacity-0 group-hover:opacity-100">
-                  更換教師
+                  ?��??�師
                 </span>
               </div>
             </button>
@@ -760,8 +759,7 @@ export default function ConversationChatPage() {
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-xs text-white">
-                  您
-                </div>
+                  ??                </div>
               </div>
             </div>
           )}
@@ -792,7 +790,7 @@ export default function ConversationChatPage() {
             </button>
 
             <p className="mt-3 text-center text-sm text-white drop-shadow-lg">
-              {isRecording ? '放開以發送...' : '按住說話'}
+              {isRecording ? '?��?以發??..' : '?��?說話'}
             </p>
 
             {recordingError && (
@@ -841,10 +839,10 @@ export default function ConversationChatPage() {
       {settings.topicMode === 'scenario' && (
         <CompletionPrompt
           isAllCompleted={allCheckpointsCompleted}
-          onContinue={() => setAllCheckpointsCompleted(false)} // 關閉提示，繼續對話
-          onEnd={handleEndConversation}
+          onContinue={() => setAllCheckpointsCompleted(false)} // ?��??�示，繼續�?�?          onEnd={handleEndConversation}
         />
       )}
     </div>
   )
 }
+
