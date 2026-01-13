@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
+// Last updated: 2026-01-13 - TTS fixes deployed
 const nextConfig = {
-  
+
   // 圖片優化設定
   images: {
     unoptimized: true
