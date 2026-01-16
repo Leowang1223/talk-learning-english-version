@@ -883,52 +883,82 @@ export default function LessonPage() {
     voices: SpeechSynthesisVoice[],
     englishVoiceConfig: any
   ): SpeechSynthesisVoice | undefined => {
+    console.log(`\n🔍 [Voice Selection] Starting voice selection...`)
+    console.log(`📊 Total voices available: ${voices.length}`)
+
+    // 列出所有英文語音供調試
+    const englishVoices = voices.filter(v => v.lang.startsWith('en'))
+    console.log(`🇬🇧 English voices found: ${englishVoices.length}`)
+    englishVoices.forEach((v, i) => {
+      console.log(`  ${i + 1}. ${v.name} (${v.lang})`)
+    })
+
     // 1. 精確匹配首選語音名稱
     if (englishVoiceConfig.preferredVoiceName) {
+      console.log(`\n🎯 Step 1: Trying exact match for "${englishVoiceConfig.preferredVoiceName}"`)
       const exact = voices.find(v => v.name === englishVoiceConfig.preferredVoiceName)
       if (exact) {
-        console.log(`✅ Found preferred voice (exact): ${exact.name}`)
+        console.log(`✅ SUCCESS: Found exact match - ${exact.name}`)
         return exact
       }
+      console.log(`❌ No exact match found`)
     }
 
     // 2. 部分匹配首選語音名稱
     if (englishVoiceConfig.preferredVoiceName) {
+      console.log(`\n🎯 Step 2: Trying partial match`)
       const parts = englishVoiceConfig.preferredVoiceName.toLowerCase().split(' ')
+      console.log(`  Looking for keywords: ${parts.filter((p: string) => p.length > 3).join(', ')}`)
       const partial = voices.find(v => {
         const nameLower = v.name.toLowerCase()
         return v.lang.startsWith('en') &&
           parts.some((p: string) => p.length > 3 && nameLower.includes(p))
       })
       if (partial) {
-        console.log(`✅ Found preferred voice (partial): ${partial.name}`)
+        console.log(`✅ SUCCESS: Found partial match - ${partial.name}`)
         return partial
       }
+      console.log(`❌ No partial match found`)
     }
 
     // 3. 基於音調匹配語音名稱（不依賴 male/female 關鍵字）
+    console.log(`\n🎯 Step 3: Gender-based matching (pitch: ${englishVoiceConfig.pitch})`)
     const isHighPitch = englishVoiceConfig.pitch >= 1.1
-    const genderNames = isHighPitch
-      ? ['sara', 'jenny', 'emma', 'michelle', 'aria', 'female', 'woman']
-      : ['david', 'guy', 'eric', 'jason', 'male', 'man']
+    console.log(`  Target gender: ${isHighPitch ? 'Female (high pitch >= 1.1)' : 'Male (low pitch < 1.1)'}`)
 
-    const pitched = voices.find(v =>
-      v.lang.startsWith('en') &&
-      genderNames.some((name: string) => v.name.toLowerCase().includes(name))
-    )
+    const genderNames = isHighPitch
+      ? ['sara', 'jenny', 'emma', 'michelle', 'aria', 'zira', 'susan', 'female', 'woman']
+      : ['david', 'guy', 'eric', 'jason', 'mark', 'male', 'man']
+
+    console.log(`  Searching for voice names containing: ${genderNames.join(', ')}`)
+
+    const pitched = voices.find(v => {
+      if (!v.lang.startsWith('en')) return false
+      const nameLower = v.name.toLowerCase()
+      const matched = genderNames.some((name: string) => nameLower.includes(name))
+      if (matched) {
+        console.log(`    ✓ Found candidate: ${v.name}`)
+      }
+      return matched
+    })
+
     if (pitched) {
-      console.log(`✅ Found voice by pitch/gender: ${pitched.name}`)
+      console.log(`✅ SUCCESS: Selected ${pitched.name} based on gender matching`)
       return pitched
     }
+    console.log(`❌ No gender-based match found`)
 
-    // 4. 任何英文語音（備用）
-    const fallback = voices.find(v => v.lang.startsWith('en'))
+    // 4. 智能備用：根據 pitch 選擇第一個英文語音
+    console.log(`\n🎯 Step 4: Fallback - selecting first available English voice`)
+    const fallback = englishVoices[0]
     if (fallback) {
-      console.log(`⚠️ Using fallback English voice: ${fallback.name}`)
-    } else {
-      console.error(`❌ No English voice found!`)
+      console.log(`⚠️ FALLBACK: Using ${fallback.name} (may not match desired gender)`)
+      console.log(`   Note: This voice may sound ${isHighPitch ? 'male' : 'female'} instead of ${isHighPitch ? 'female' : 'male'}`)
+      return fallback
     }
-    return fallback
+
+    console.error(`❌ CRITICAL: No English voices available at all!`)
+    return undefined
   }
 
   // 🎤 純英文 TTS（英文學習系統）
@@ -2058,11 +2088,11 @@ export default function LessonPage() {
       addOrUpdateFlashcard({
         questionId: targetStep.id,
         lessonId: lesson.lesson_id || lessonId,
-        prompt: targetStep.teacher,  // 正面：英文
-        expectedAnswer: targetStep.chinese_hint ||  // 背面：中文
+        prompt: targetStep.chinese_hint ||  // ✅ 正確：prompt 存中文提示
           (Array.isArray(targetStep.expected_answer)
             ? String(targetStep.expected_answer[0])
             : String(targetStep.expected_answer)),
+        expectedAnswer: targetStep.teacher,  // ✅ 正確：expectedAnswer 存英文教學內容
         custom: true,
         deckName: selectedDeck || 'General'
       })

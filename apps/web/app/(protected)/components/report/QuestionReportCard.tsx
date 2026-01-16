@@ -36,11 +36,11 @@ export function QuestionReportCard({
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <p className="font-semibold text-gray-800 text-lg mb-2">
-            Question {index + 1}: {result.question.replace(/\([^)]*\)/g, '').trim()}
+            第 {index + 1} 題：{result.question.replace(/\([^)]*\)/g, '').trim()}
           </p>
           {showTranscript && result.transcript && (
             <p className="text-sm text-blue-600 mb-2">
-              🎤 Your response: "{result.transcript}"
+              🎤 您的回答：「{result.transcript}」
             </p>
           )}
         </div>
@@ -53,12 +53,12 @@ export function QuestionReportCard({
       
       {/* 狀態資訊 */}
       <div className="flex gap-4 text-sm text-gray-600 mb-4">
-        <span>🎯 Attempts: {result.attempts}</span>
+        <span>🎯 嘗試次數：{result.attempts}</span>
         {SHOW_SCORES && (
           <span>
-            {result.score >= 90 ? '✅ Excellent Performance' :
-             result.score >= 75 ? '✅ Passed' :
-             '❌ Needs More Practice'}
+            {result.score >= 90 ? '✅ 表現優異' :
+             result.score >= 75 ? '✅ 通過' :
+             '❌ 需要更多練習'}
           </span>
         )}
       </div>
@@ -68,7 +68,7 @@ export function QuestionReportCard({
         <div className="bg-red-50 rounded-lg p-4 border-l-4 border-red-500 mb-4">
           <h4 className="text-sm font-bold text-red-800 mb-3 flex items-center gap-2">
             <span className="text-lg">🚨</span>
-            Character & Pronunciation Errors ({result.errors.length})
+            字詞與發音錯誤 ({result.errors.length})
           </h4>
           <div className="space-y-2">
             {result.errors.slice(0, 5).map((error, idx) => (
@@ -76,19 +76,19 @@ export function QuestionReportCard({
                 {error.type === 'wrong' && (
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-red-600 font-bold">Position {error.position + 1}:</span>
-                      <span className="text-gray-700">Wrong character</span>
+                      <span className="text-red-600 font-bold">位置 {error.position + 1}：</span>
+                      <span className="text-gray-700">錯誤字詞</span>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-2">
                       <div className="bg-red-100 rounded p-2">
-                        <div className="text-xs text-red-700 font-semibold mb-1">❌ You said:</div>
+                        <div className="text-xs text-red-700 font-semibold mb-1">❌ 您說的是：</div>
                         <div className="text-lg font-bold text-red-800">{error.actual}</div>
                         {error.actualPinyin && (
                           <div className="text-xs text-red-600 mt-1">{error.actualPinyin}</div>
                         )}
                       </div>
                       <div className="bg-green-100 rounded p-2">
-                        <div className="text-xs text-green-700 font-semibold mb-1">✅ Should be:</div>
+                        <div className="text-xs text-green-700 font-semibold mb-1">✅ 應該是：</div>
                         <div className="text-lg font-bold text-green-800">{error.expected}</div>
                         {error.expectedPinyin && (
                           <div className="text-xs text-green-600 mt-1">{error.expectedPinyin}</div>
@@ -99,8 +99,8 @@ export function QuestionReportCard({
                 )}
                 {error.type === 'missing' && (
                   <div>
-                    <span className="text-orange-600 font-bold">Position {error.position + 1}:</span>
-                    <span className="text-gray-700"> Missing character </span>
+                    <span className="text-orange-600 font-bold">位置 {error.position + 1}：</span>
+                    <span className="text-gray-700"> 缺少字詞 </span>
                     <span className="bg-green-100 px-2 py-1 rounded text-green-800 font-bold">{error.expected}</span>
                     {error.expectedPinyin && (
                       <span className="text-xs text-green-600 ml-2">({error.expectedPinyin})</span>
@@ -109,17 +109,17 @@ export function QuestionReportCard({
                 )}
                 {error.type === 'extra' && (
                   <div>
-                    <span className="text-purple-600 font-bold">Position {error.position + 1}:</span>
-                    <span className="text-gray-700"> Extra character </span>
+                    <span className="text-purple-600 font-bold">位置 {error.position + 1}：</span>
+                    <span className="text-gray-700"> 多餘字詞 </span>
                     <span className="bg-red-100 px-2 py-1 rounded text-red-800 font-bold">{error.actual}</span>
-                    <span className="text-gray-600"> should be removed</span>
+                    <span className="text-gray-600"> 應該移除</span>
                   </div>
                 )}
               </div>
             ))}
             {result.errors.length > 5 && (
               <div className="text-xs text-gray-500 italic text-center pt-2">
-                ... and {result.errors.length - 5} more errors
+                ... 還有 {result.errors.length - 5} 個錯誤
               </div>
             )}
           </div>
@@ -131,7 +131,7 @@ export function QuestionReportCard({
         <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-400 mb-4">
           <h4 className="text-sm font-semibold text-yellow-800 mb-2 flex items-center gap-2">
             <span className="text-lg">💡</span>
-            Correction Tips:
+            改進建議：
           </h4>
           <p className="text-sm text-yellow-900 whitespace-pre-wrap">{result.correctionFeedback}</p>
         </div>
@@ -142,7 +142,7 @@ export function QuestionReportCard({
         <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-400 mb-4">
           <h4 className="text-sm font-semibold text-orange-800 mb-3 flex items-center gap-2">
             <span className="text-lg">🔈</span>
-            Mispronounced Words:
+            發音錯誤的詞：
           </h4>
           <div className="space-y-2">
             {result.mispronounced.map((item, idx) => (
@@ -151,8 +151,8 @@ export function QuestionReportCard({
                   <span className="text-xl font-bold text-orange-600">{item.text}</span>
                   {item.pinyin && <span className="text-xs text-gray-500">({item.pinyin})</span>}
                 </div>
-                {item.issue && <p className="text-xs text-gray-600 mt-1">Issue: {item.issue}</p>}
-                {item.tip && <p className="text-xs text-gray-600 mt-0.5">Tip: {item.tip}</p>}
+                {item.issue && <p className="text-xs text-gray-600 mt-1">問題：{item.issue}</p>}
+                {item.tip && <p className="text-xs text-gray-600 mt-0.5">提示：{item.tip}</p>}
               </div>
             ))}
           </div>
@@ -162,7 +162,7 @@ export function QuestionReportCard({
       {/* 詳細評分 */}
       {SHOW_SCORES && result.detailedScores && (
         <div className="bg-white rounded-lg p-4 mb-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Detailed Scores:</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">詳細分數：</h4>
           <DetailedScoresDisplay scores={result.detailedScores} layout="horizontal" />
         </div>
       )}
@@ -179,7 +179,7 @@ export function QuestionReportCard({
       {/* 舊版建議（向後兼容） */}
       {!result.suggestions && result.feedback && (
         <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-400">
-          <h4 className="text-sm font-semibold text-blue-800 mb-2">💡 AI Feedback:</h4>
+          <h4 className="text-sm font-semibold text-blue-800 mb-2">💡 AI 回饋：</h4>
           <p className="text-sm text-blue-700">{result.feedback}</p>
         </div>
       )}
@@ -191,7 +191,7 @@ export function QuestionReportCard({
           onClick={() => router.push(`/history/playback/${lessonId}/${result.stepId}`)}
           className="mt-4"
         >
-          Retry This Question
+          重新練習此題
         </AppButton>
       )}
     </div>

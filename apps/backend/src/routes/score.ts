@@ -58,26 +58,26 @@ export async function scoreHandler(req: Request, res: Response) {
         const audioBase64 = audioFile.buffer.toString('base64');
 
         const prompt = [
-          'You are a professional English pronunciation scoring system.',
+          '你是一個專業的英文發音評分系統。',
           '',
-          'Task:',
-          '1. Listen to the English pronunciation in the audio',
-          '2. Compare with the expected answer',
-          '3. Give a score from 0-100',
+          '任務：',
+          '1. 聆聽音訊中的英文發音',
+          '2. 與預期答案進行比較',
+          '3. 給予 0-100 分的評分',
           '',
-          `Expected answer: ${expectedAnswers.join(' or ')}`,
+          `預期答案：${expectedAnswers.join(' 或 ')}`,
           '',
-          'Scoring criteria:',
-          '- Pronunciation accuracy (40%)',
-          '- Intonation and stress (20%)',
-          '- Fluency (20%)',
-          '- Completeness (20%)',
+          '評分標準：',
+          '- 發音準確度 (40%)',
+          '- 語調與重音 (20%)',
+          '- 流暢度 (20%)',
+          '- 完整度 (20%)',
           '',
-          'IMPORTANT: Please provide feedback in English.',
+          '重要：請用繁體中文提供詳細的改進建議，幫助學習者提升英文發音。',
           '',
-          'Return in JSON format:',
+          '請以 JSON 格式回應：',
           '{',
-          '  "transcript": "recognized text",',
+          '  "transcript": "辨識的文字",',
           '  "overall_score": 85,',
           '  "scores": {',
           '    "pronunciation": 88,',
@@ -86,7 +86,7 @@ export async function scoreHandler(req: Request, res: Response) {
           '    "comprehension": 85,',
           '    "confidence": 83',
           '  },',
-          '  "feedback": "Detailed feedback in English"',
+          '  "feedback": "用繁體中文提供的詳細改進建議"',
           '}'
         ].join('\n');
 
@@ -158,10 +158,10 @@ export async function scoreHandler(req: Request, res: Response) {
       },
       transcript: expectedAnswers[0] || '',
       feedback: overall_score >= 90
-        ? 'Excellent pronunciation! Your intonation and fluency are outstanding. Keep up the great work!'
+        ? '發音優秀！您的語調和流暢度都非常出色，請繼續保持！'
         : overall_score >= 75
-        ? 'Good job! Your pronunciation is clear and understandable. Continue practicing to perfect your intonation and stress patterns.'
-        : 'Keep practicing! Focus on pronunciation accuracy, intonation, and stress. Try to speak more clearly and confidently.',
+        ? '表現良好！您的發音清晰且易於理解。建議繼續練習以完善語調和重音模式。'
+        : '請繼續練習！請專注於發音準確度、語調和重音。試著說得更清楚、更有自信。',
       method: 'mock'
     };
 
