@@ -41,7 +41,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'male',
       pitch: 0.8,
       rate: 0.9,
-      preferredVoiceName: 'Microsoft David Online (Natural) - English (United States)',
+      preferredVoiceName: 'David',
     },
   },
   {
@@ -60,7 +60,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'female',
       pitch: 1.3,
       rate: 1.05,
-      preferredVoiceName: 'Microsoft Aria Online (Natural) - English (United States)',
+      preferredVoiceName: 'Aria',
     },
   },
   {
@@ -79,7 +79,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'female',
       pitch: 1.2,
       rate: 1.1,
-      preferredVoiceName: 'Microsoft Jenny Online (Natural) - English (United States)',
+      preferredVoiceName: 'Jenny',
     },
   },
   {
@@ -98,7 +98,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'male',
       pitch: 0.75,
       rate: 0.85,
-      preferredVoiceName: 'Microsoft Guy Online (Natural) - English (United States)',
+      preferredVoiceName: 'Guy',
     },
   },
   {
@@ -117,7 +117,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'female',
       pitch: 1.25,
       rate: 1.0,
-      preferredVoiceName: 'Microsoft Michelle Online (Natural) - English (United States)',
+      preferredVoiceName: 'Michelle',
     },
   },
   {
@@ -136,7 +136,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'female',
       pitch: 1.15,
       rate: 1.1,
-      preferredVoiceName: 'Microsoft Emma Online (Natural) - English (United States)',
+      preferredVoiceName: 'Emma',
     },
   },
   {
@@ -155,7 +155,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'male',
       pitch: 0.85,
       rate: 0.95,
-      preferredVoiceName: 'Microsoft Eric Online (Natural) - English (United States)',
+      preferredVoiceName: 'Eric',
     },
   },
   {
@@ -174,7 +174,7 @@ const INTERVIEWERS: Interviewer[] = [
       gender: 'female',
       pitch: 1.1,
       rate: 1.0,
-      preferredVoiceName: 'Microsoft Sara Online (Natural) - English (United States)',
+      preferredVoiceName: 'Sara',
     },
   },
 ]
@@ -324,7 +324,7 @@ export function getInterviewerEnglishVoice(interviewerId: string) {
     gender: 'female' as const,
     pitch: 1.0,
     rate: 1.0,
-    preferredVoiceName: 'Microsoft Jenny Online (Natural) - English (United States)',
+    preferredVoiceName: 'Jenny',
   }
 }
 
