@@ -44,7 +44,7 @@
       "expected_answer": [
         "Morning."
       ],
-      "chinese_hint": "早安 (zǎo ān) / 早上好 (zǎo shang hǎo)",
+      "chinese_hint": "早安 (zǎo ān)",
       "encouragement": "Well done!",
       "tts_text": "Morning.",
       "tts_voice": "en-US-JennyNeural"
@@ -66,7 +66,7 @@
       "expected_answer": [
         "Evening."
       ],
-      "chinese_hint": "晚上 / 傍晚 (depending on the context, 晚上 is more general, 傍晚 is closer to dusk)",
+      "chinese_hint": "晚上",
       "encouragement": "Excellent!",
       "tts_text": "Evening.",
       "tts_voice": "en-US-JennyNeural"
@@ -88,7 +88,7 @@
       "expected_answer": [
         "Wait a second."
       ],
-      "chinese_hint": "等一下 / 晚點 / 待會兒",
+      "chinese_hint": "等一下",
       "encouragement": "You're doing well!",
       "tts_text": "Hold on.",
       "tts_voice": "en-US-JennyNeural"
@@ -99,7 +99,7 @@
       "expected_answer": [
         "Hour"
       ],
-      "chinese_hint": "小時 / 鐘頭",
+      "chinese_hint": "小時",
       "encouragement": "Nice job!",
       "tts_text": "hour",
       "tts_voice": "en-US-JennyNeural"

@@ -9,7 +9,7 @@
       "id": 1,
       "teacher": "銀行在郵局旁邊。",
       "expected_answer": [
-        "銀行在郵局旁邊."
+        "銀行在郵局旁邊。"
       ],
       "pinyin": "yín háng zài yóu jú páng biān.",
       "english_hint": "The bank is next to the post office.",

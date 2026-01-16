@@ -32,7 +32,7 @@
         "多"
       ],
       "pinyin": "duō",
-      "english_hint": "many / much",
+      "english_hint": "many",
       "encouragement": "Good job!"
     },
     {
@@ -42,7 +42,7 @@
         "少"
       ],
       "pinyin": "shǎo",
-      "english_hint": "few / little",
+      "english_hint": "few",
       "encouragement": "Excellent!"
     },
     {
@@ -92,7 +92,7 @@
         "高"
       ],
       "pinyin": "gāo",
-      "english_hint": "tall / high",
+      "english_hint": "tall",
       "encouragement": "Awesome!"
     },
     {

@@ -29,7 +29,7 @@
       "id": 3,
       "teacher": "我知道你已經很努力了。",
       "expected_answer": [
-        "我知道你已經很努力了."
+        "我知道你已經很努力了。"
       ],
       "pinyin": "wǒ zhī dào nǐ yǐ jīng hěn nǔ lì le.",
       "english_hint": "I know you've already worked very hard.",

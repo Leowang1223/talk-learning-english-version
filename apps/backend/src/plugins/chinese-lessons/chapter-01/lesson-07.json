@@ -24,7 +24,7 @@
         "飯"
       ],
       "pinyin": "fàn",
-      "english_hint": "rice / meal",
+      "english_hint": "rice",
       "encouragement": "Nice!",
       "tts_text": "飯",
       "tts_voice": "zh-TW-HsiaoChenNeural"
@@ -120,7 +120,7 @@
         "糖"
       ],
       "pinyin": "táng",
-      "english_hint": "sugar / candy",
+      "english_hint": "sugar",
       "encouragement": "Fantastic!",
       "tts_text": "糖",
       "tts_voice": "zh-TW-HsiaoChenNeural"

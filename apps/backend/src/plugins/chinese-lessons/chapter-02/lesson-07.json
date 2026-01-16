@@ -21,7 +21,7 @@
       "expected_answer": [
         "誰"
       ],
-      "pinyin": "shuí / shéi",
+      "pinyin": "shuí",
       "english_hint": "who",
       "encouragement": "Nice!"
     },
@@ -82,7 +82,7 @@
         "多少"
       ],
       "pinyin": "duō shǎo",
-      "english_hint": "how many / how much",
+      "english_hint": "how many",
       "encouragement": "Good progress!"
     },
     {
@@ -92,7 +92,7 @@
         "怎麼樣"
       ],
       "pinyin": "zěn me yàng",
-      "english_hint": "how about / how is it",
+      "english_hint": "how about",
       "encouragement": "Awesome!"
     },
     {

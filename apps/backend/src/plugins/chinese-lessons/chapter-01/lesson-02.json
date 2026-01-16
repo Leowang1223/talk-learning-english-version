@@ -44,7 +44,7 @@
       "expected_answer": [
         "I am."
       ],
-      "chinese_hint": "我是...",
+      "chinese_hint": "我是..。",
       "encouragement": "Well done!",
       "tts_text": "I am...",
       "tts_voice": "en-US-JennyNeural"
@@ -73,13 +73,13 @@
     },
     {
       "id": 7,
-      "teacher": "He / Him",
+      "teacher": "He",
       "expected_answer": [
         "He/Him"
       ],
-      "chinese_hint": "他 / 他 (depends on context, usually 他 is fine)",
+      "chinese_hint": "他",
       "encouragement": "Good job!",
-      "tts_text": "He / Him",
+      "tts_text": "He",
       "tts_voice": "en-US-JennyNeural"
     },
     {
@@ -88,20 +88,20 @@
       "expected_answer": [
         "She"
       ],
-      "chinese_hint": "她 / 她的",
+      "chinese_hint": "她",
       "encouragement": "You're doing great!",
       "tts_text": "She",
       "tts_voice": "en-US-JennyNeural"
     },
     {
       "id": 9,
-      "teacher": "Us, we, or our, depending on the context.",
+      "teacher": "We",
       "expected_answer": [
         "We"
       ],
-      "chinese_hint": "我們 / 咱們 (depends on context)",
+      "chinese_hint": "我們",
       "encouragement": "Nice work!",
-      "tts_text": "Us, we, or our, depending on the context.",
+      "tts_text": "We",
       "tts_voice": "en-US-JennyNeural"
     },
     {

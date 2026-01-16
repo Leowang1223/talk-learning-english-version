@@ -12,7 +12,7 @@
         "看"
       ],
       "pinyin": "kàn",
-      "english_hint": "to see / to look",
+      "english_hint": "to see",
       "encouragement": "Great start!",
       "tts_text": "看",
       "tts_voice": "zh-TW-HsiaoChenNeural"
@@ -120,7 +120,7 @@
         "做"
       ],
       "pinyin": "zuò",
-      "english_hint": "to do / to make",
+      "english_hint": "to do",
       "encouragement": "Fantastic work!",
       "tts_text": "做",
       "tts_voice": "zh-TW-HsiaoChenNeural"

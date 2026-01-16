@@ -99,7 +99,7 @@
       "id": 10,
       "teacher": "我現在更累。",
       "expected_answer": [
-        "我現在更累. "
+        "我現在更累。"
       ],
       "pinyin": "wǒ xiàn zài gèng lèi.",
       "english_hint": "I'm more tired now.",
