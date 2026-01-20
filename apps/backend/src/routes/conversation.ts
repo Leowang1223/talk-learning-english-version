@@ -600,7 +600,7 @@ router.post('/start', authenticateUser, async (req: AuthRequest, res) => {
         if (apiKey) {
           try {
             const genAI = new GoogleGenerativeAI(apiKey)
-            const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+            const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
 
             const prompt = `${aiRole.systemPrompt}
 
@@ -937,7 +937,7 @@ router.post('/message', authenticateUser, upload.single('audio'), async (req: Au
 
     // 1. 語音轉文字 (STT)
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
     const audioBase64 = audioFile.buffer.toString('base64')
 
     let transcript = ''
@@ -1620,7 +1620,7 @@ router.post('/end', authenticateUser, async (req: AuthRequest, res) => {
     if (apiKey) {
       try {
         const genAI = new GoogleGenerativeAI(apiKey)
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
 
         const conversationText = session.conversationHistory
           .map(turn => `${turn.role === 'user' ? 'User' : 'AI'}: ${turn.text}`)
