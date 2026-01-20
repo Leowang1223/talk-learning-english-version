@@ -9,6 +9,7 @@ import { InterviewerSelector, getInterviewerImagePath, getInterviewerVoice, getI
 import ProgressTracker from '../components/ProgressTracker'
 import CompletionPrompt from '../components/CompletionPrompt'
 import { type ScenarioCheckpoint, apiGetScenarioById, fetchJson, getApiBase } from '@/lib/api'
+import { createClient } from '@/lib/supabase/client'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -563,8 +564,22 @@ export default function ConversationChatPage() {
       formData.append('sessionId', sessionId)
       formData.append('audio', audioBlob, 'recording.webm')
 
+      // Get auth token from Supabase
+      const headers: HeadersInit = {}
+      try {
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`
+        }
+      } catch (error) {
+        console.error('⚠️ Failed to get auth token:', error)
+      }
+
       const response = await fetch(`${getApiBase()}/api/conversation/message`, {
         method: 'POST',
+        headers,
         body: formData,
       })
 
